@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2317754C'/%3E%3Cpath d='M8 24c0-9 6-15 16-15c0 10-6 15-16 15z' fill='%23F4F7F2'/%3E%3C/svg%3E">
+<style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>The Luntian Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Rubik:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a screening-room player (16:9 stage, captions under it, chapter strip), then three hands-on tools that let people explore the plan */
+:root{
+  --bg:#F1F4EE;--surface:#FBFCF8;--ink:#13241C;--muted:#4A5B51;--line:#D5DDD2;
+  --accent:#17754C;--accent-ink:#F4F7F2;--accent-soft:#DDEDE2;--amber:#E3A23A;--amber-ink:#8A5A00;--good-bg:#DDEDE2;--wait-bg:#F6EBD5;
+  --stage:#0C241C;--stage-2:#12342A;--stage-3:#1A4436;--stage-ink:#F3F1E8;--stage-muted:#A9C2B4;--stage-green:#5FD39A;--stage-amber:#F2B544;--stage-line:#285243;
+  --display:'Rubik','Trebuchet MS',system-ui,sans-serif;--body:'Nunito Sans','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1712;--surface:#11221A;--ink:#E6EEE8;--muted:#A8BBAF;--line:#24382E;--accent:#5FD39A;--accent-ink:#0B1712;--accent-soft:#173327;--amber:#F2B544;--amber-ink:#F2B544;--good-bg:#173327;--wait-bg:#2E2614;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1712;--surface:#11221A;--ink:#E6EEE8;--muted:#A8BBAF;--line:#24382E;--accent:#5FD39A;--accent-ink:#0B1712;--accent-soft:#173327;--amber:#F2B544;--amber-ink:#F2B544;--good-bg:#173327;--wait-bg:#2E2614;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:20px;padding-block:28px 72px}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.eyebrow{font:600 13px/1.2 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font:700 clamp(36px,5.4vw,60px)/1.04 var(--display);letter-spacing:-.02em;margin:10px 0 12px;text-wrap:balance}
+.lede{max-width:64ch;color:var(--muted);font-size:clamp(16px,1.8vw,19px);margin:0}
+.byline{margin:16px 0 0;font:600 15px/1.4 var(--display);color:var(--ink)}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.links a{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);text-decoration:none;font:600 14px var(--display);color:var(--ink)}
+.links a:hover{border-color:var(--accent)}
+.player{margin-top:28px;display:grid;gap:12px}
+.stage{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;background:var(--stage);border-radius:18px;overflow:hidden;box-shadow:0 18px 50px rgba(8,30,22,.22)}
+.canvas{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0}
+.scene{position:absolute;inset:0}
+.bigplay{position:absolute;left:16px;bottom:16px;z-index:3;display:inline-flex;align-items:center;gap:10px;font:700 16px var(--display);background:var(--stage-amber);color:#0C241C;border:0;border-radius:999px;padding:12px 20px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.bigplay svg{width:16px;height:16px}
+.caption{margin:0;min-height:3.4em;display:flex;align-items:center;font:600 clamp(16px,2vw,21px)/1.4 var(--display);color:var(--ink);padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.cbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px var(--display);cursor:pointer}
+.cbtn:hover{border-color:var(--accent)}
+.cbtn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);min-width:110px}
+.cbtn svg{width:18px;height:18px;flex:none}
+.progress{flex:1 1 240px;min-width:0;display:flex;gap:3px;align-items:center;height:44px}
+.seg{position:relative;height:8px;border-radius:4px;background:var(--line);border:0;padding:0;cursor:pointer;overflow:hidden;min-width:6px}
+.seg>span{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent)}
+.count{font:600 14px var(--display);color:var(--muted);font-variant-numeric:tabular-nums;min-width:56px;text-align:right}
+.chapters{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.chapters button{width:100%;display:flex;gap:10px;align-items:baseline;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px/1.3 var(--display);cursor:pointer}
+.chapters button .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.chapters button[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.explore{margin-top:64px}
+.explore>h2{font:700 clamp(28px,3.6vw,40px)/1.1 var(--display);letter-spacing:-.01em;margin:8px 0 6px}
+.explore>p{color:var(--muted);margin:0;max-width:64ch}
+.tool{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(16px,3vw,28px);margin-top:20px}
+.tool h3{font:600 clamp(21px,2.4vw,26px)/1.2 var(--display);margin:0 0 4px}
+.tool .hint{color:var(--muted);margin:0 0 16px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.tab{padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 15px var(--display);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ph-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:28px}
+@media (max-width:780px){.ph-grid,.pay-grid{grid-template-columns:minmax(0,1fr)!important}}
+.ph-name{font:700 clamp(24px,2.8vw,32px)/1.1 var(--display);margin:0}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:14px 0;font-size:16px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.what{margin:0 0 16px}
+.ends{border-top:1px solid var(--line);padding-top:14px}
+.ends b{font-family:var(--display)}
+.ends ul{margin:8px 0 0;padding-left:20px;color:var(--muted)}
+.ends li{margin:4px 0}
+.mini{width:100%;height:auto;display:block;margin-bottom:12px}
+.acts{list-style:none;margin:0;padding:0}
+.acts li{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) 7.4em;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.acts .bar{position:relative;height:10px;border-radius:5px;background:var(--line)}
+.acts .bar i{position:absolute;top:0;bottom:0;border-radius:5px;background:var(--accent)}
+.acts .when{color:var(--muted);font-size:13px;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.pay-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:28px;align-items:start}
+.field{display:grid;gap:8px;margin-bottom:18px}
+.field label{font-weight:700}
+.field output{font:700 22px var(--display);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
+.result{border-radius:14px;padding:16px 18px;background:var(--good-bg)}
+.result.wait{background:var(--wait-bg)}
+.result .big{font:700 clamp(30px,4vw,42px)/1 var(--display);margin:0 0 6px;font-variant-numeric:tabular-nums}
+.result p{margin:0}
+.note{color:var(--muted);font-size:14px;margin-top:12px}
+.chart svg{width:100%;height:auto;display:block}
+.gate-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.gate-list li{padding:12px 14px;border:1px solid var(--line);border-radius:12px}
+.verdict{margin-top:16px;border-radius:14px;padding:16px 18px;background:var(--wait-bg)}
+.verdict.go{background:var(--good-bg)}
+.verdict b{font:700 clamp(19px,2.2vw,23px)/1.3 var(--display);display:block}
+.verdict p{margin:6px 0 0;color:var(--muted)}
+footer{margin-top:56px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
+footer p{margin:0 0 6px;max-width:90ch}
+
+/* the stage (a fixed dark screen in both themes) */
+.cv{font-family:var(--body);color:var(--stage-ink)}
+.cv .ab{position:absolute;margin:0}
+.cv .lab{font:600 17px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--stage-green)}
+.cv .lab .num{opacity:.65;margin-right:16px}
+.cv .sh{font:600 44px/1.1 var(--display);letter-spacing:-.01em;color:var(--stage-ink)}
+.cv .eb{font:600 20px/1.2 var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--stage-green)}
+.cv .xl{font:700 132px/1 var(--display);letter-spacing:-.03em;color:var(--stage-ink);white-space:nowrap}
+.cv .ltr{display:inline-block}
+.cv .sub{font:500 32px/1.3 var(--display);color:var(--stage-muted)}
+.cv .note2{font:400 24px/1.4 var(--body);color:var(--stage-muted)}
+.cv .card{background:var(--stage-2);border:1px solid var(--stage-line);border-radius:20px}
+.cv .body{font:400 24px/1.4 var(--body);color:var(--stage-muted)}
+.cv .flow{stroke-dasharray:6 12;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-36}}
+.cv .phone{background:#06140F;border-radius:40px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.45);border:2px solid #2A4D40}
+.cv .screen{background:#F3F1E8;border-radius:28px;height:100%;padding:22px 16px;display:flex;flex-direction:column;gap:14px}
+.cv .ph-top{font:700 16px var(--display);color:#17754C;text-align:center;letter-spacing:.04em;margin:0 0 6px}
+.cv .bub{max-width:84%;padding:12px 14px;border-radius:18px;font:600 18px/1.35 var(--body)}
+.cv .bub.me{align-self:flex-end;background:#17754C;color:#F3F1E8;border-bottom-right-radius:6px}
+.cv .typing{align-self:flex-start;background:#DCE5DD;border-radius:18px;padding:12px 16px;display:flex;gap:6px}
+.cv .typing i{width:9px;height:9px;border-radius:50%;background:#7C8F84;animation:blink 1.2s infinite}
+.cv .typing i:nth-child(2){animation-delay:.2s}.cv .typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.cv .meter{background:var(--stage-3);border-radius:22px;overflow:hidden}
+.cv .meter .fill{height:100%;background:linear-gradient(90deg,#2F9A66,#5FD39A);border-radius:22px;transform-origin:left center}
+.cv .mval{font:400 24px/1.4 var(--body);color:var(--stage-muted)}
+.cv .mval b{color:var(--stage-ink);font-family:var(--display);font-weight:600}
+.cv .row{display:flex;align-items:center;gap:22px;padding:0 28px;height:100%}
+.cv .ic{flex:none;width:64px;height:64px;border-radius:50%;background:var(--stage-green);display:grid;place-items:center}
+.cv .ic svg{width:34px;height:34px}
+.cv .row b{display:block;font:600 28px/1.2 var(--display);color:var(--stage-ink)}
+.cv .row span{display:block;font:400 22px/1.35 var(--body);color:var(--stage-muted);margin-top:4px}
+.cv .stat{padding:26px 30px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.cv .stat .big{font:700 84px/1 var(--display);color:var(--stage-green);letter-spacing:-.02em;margin:0;font-variant-numeric:tabular-nums}
+.cv .stat .lbl{font:400 23px/1.35 var(--body);color:var(--stage-muted);margin:0}
+.cv .lane-l b{display:block;font:600 26px/1.2 var(--display);color:var(--stage-ink)}
+.cv .lane-l span{display:block;font:400 20px var(--body);color:var(--stage-muted);margin-top:4px}
+.cv .track{background:var(--stage-3);border-radius:22px}
+.cv .tfill{position:absolute;left:0;top:0;height:100%;border-radius:22px;width:0}
+.cv .tfill.build{background:#6E8C7E}.cv .tfill.adapt{background:#5FD39A}.cv .tfill.live{background:#B7E9CF;border-radius:0 22px 22px 0}
+.cv .runner{position:absolute;top:50%;left:0;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--stage-ink);box-shadow:0 0 0 6px rgba(243,241,232,.18)}
+.cv .flag{font:700 20px/1 var(--display);color:#0C241C;background:var(--stage-amber);padding:10px 14px;border-radius:999px;text-align:center;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.cv .flag.on{opacity:1;transform:none}
+.cv .axis{background:#3C6B5A;height:2px}
+.cv .tick{font:400 18px var(--body);color:var(--stage-muted);text-align:center}
+.cv .node{background:#F3F1E8;color:#13241C;border-radius:18px;display:flex;flex-direction:column;justify-content:center;padding:0 22px;border:3px solid transparent;transition:box-shadow .3s,border-color .3s}
+.cv .node b{font:600 28px/1.15 var(--display)}
+.cv .node span{font:400 19px/1.3 var(--body);color:#44564C}
+.cv .n-r{background:#17754C;color:#F3F1E8;align-items:center;text-align:center}
+.cv .n-r span{color:#CFE6D6}
+.cv .n-q,.cv .n-a{align-items:center;text-align:center}
+.cv .n-b{background:transparent;border:2px dashed #3C6B5A;align-items:center}
+.cv .n-b span{color:var(--stage-muted)}
+.cv .node.lit{border-color:#F2B544;box-shadow:0 0 0 6px rgba(242,181,68,.25),0 0 40px rgba(242,181,68,.35)}
+.cv .node.soft{border-color:rgba(242,181,68,.7)}
+.cv .qb{background:#F3F1E8;color:#13241C;border-radius:24px 24px 24px 6px;padding:16px 24px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.cv .qb .tag{font:700 15px var(--display);letter-spacing:.12em;text-transform:uppercase;color:#17754C}
+.cv .qb .qt{font:600 26px/1.3 var(--body);margin:0}
+.cv .reply{background:#5FD39A;color:#0C241C;border-radius:24px 24px 6px 24px;padding:16px 22px;font:600 22px/1.35 var(--body);opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s}
+.cv .reply.on{opacity:1;transform:none}
+.cv .rail{background:#3C6B5A;height:4px;border-radius:2px}
+.cv .st{width:68px;height:68px;border-radius:50%;border:3px solid #3C6B5A;background:var(--stage);display:grid;place-items:center;font:700 26px var(--display);color:var(--stage-muted);transition:background .3s,border-color .3s,color .3s,box-shadow .3s}
+.cv .st.done{background:#1F5A45;border-color:#5FD39A;color:#CFE6D6}
+.cv .st.on{background:#5FD39A;border-color:#5FD39A;color:#0C241C;box-shadow:0 0 0 8px rgba(95,211,154,.18)}
+.cv .stl{font:600 19px/1.25 var(--display);color:var(--stage-muted);text-align:center;transition:color .3s}
+.cv .stl.on{color:var(--stage-ink)}
+.cv .pk{width:34px;height:34px;border-radius:10px;background:#F2B544;box-shadow:0 0 24px rgba(242,181,68,.6)}
+.cv .detail{padding:26px 34px}
+.cv .detail small{display:block;font:700 16px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--stage-green)}
+.cv .detail b{display:block;font:600 34px/1.2 var(--display);color:var(--stage-ink);margin-top:6px}
+.cv .detail span{display:block;font:400 24px/1.4 var(--body);color:var(--stage-muted);margin-top:8px}
+.cv .barx{border-radius:10px;transform-origin:left center}
+.cv .val{font:600 30px/56px var(--display);color:var(--stage-ink)}
+.cv .badge{width:160px;height:160px;border-radius:50%;background:#F2B544;color:#0C241C;display:grid;place-items:center;font:700 50px var(--display)}
+.cv .chip3{padding:22px 24px;display:flex;gap:16px;align-items:flex-start}
+.cv .chip3 .ic{width:52px;height:52px}
+.cv .chip3 .ic svg{width:28px;height:28px}
+.cv .chip3 p{margin:0;font:400 21px/1.35 var(--body);color:var(--stage-ink)}
+.cv .band{border-radius:14px;padding:12px 14px;transform-origin:left center;display:flex;flex-direction:column;justify-content:center;gap:4px;transition:box-shadow .3s}
+.cv .band b{font:600 24px/1.1 var(--display)}
+.cv .band span{font:700 18px var(--body)}
+.cv .b0{background:#2F8F60;color:#F3F1E8}.cv .b1{background:#CFE6D6;color:#13241C}.cv .b2{background:#B5DAC1;color:#13241C}.cv .b3{background:#9CCDAE;color:#13241C}
+.cv .band.on{box-shadow:0 0 0 4px #F2B544}
+.cv .dia{width:28px;height:28px;background:#F2B544;transform:rotate(45deg);border-radius:4px;transition:box-shadow .3s}
+.cv .dia.hit{box-shadow:0 0 0 8px rgba(242,181,68,.3)}
+.cv .glab{font:600 18px var(--display);color:var(--stage-muted);text-align:center}
+.cv .mk{width:3px;background:#F3F1E8}
+.cv .mkdot{width:16px;height:16px;border-radius:50%;background:#F3F1E8}
+.cv .mklab{font:600 18px var(--display);color:var(--stage-ink);text-align:center}
+.cv .pill{font:700 20px/1 var(--display);background:#F2B544;color:#0C241C;border-radius:999px;padding:12px 18px;text-align:center;transition:opacity .35s,transform .35s}
+.cv .hide{opacity:0;transform:translateY(-8px)}
+.cv .stem{width:3px;background:#F2B544;transition:opacity .35s}
+.cv .phtext{font:500 28px/1.35 var(--display);color:var(--stage-ink)}
+.cv .wk{font:600 16px var(--display);color:var(--stage-muted);text-align:center}
+.cv .rl{font:500 19px/22px var(--body);color:var(--stage-muted);white-space:nowrap}
+.cv .rbar{background:rgba(95,211,154,.14);border-radius:11px;overflow:hidden;height:22px}
+.cv .rbar i{display:block;height:100%;width:0;background:#5FD39A;border-radius:11px}
+.cv .wline{width:2px;background:#F2B544}
+.cv .wchip{font:700 16px var(--display);background:#F2B544;color:#0C241C;border-radius:999px;padding:6px 10px;text-align:center;width:88px}
+.cv .g1{display:flex;align-items:center;justify-content:flex-end;gap:14px;opacity:0;transition:opacity .4s}
+.cv .g1.on{opacity:1}
+.cv .g1 b{font:600 22px var(--display);color:var(--stage-ink)}
+.cv .slab{font:700 18px/1.2 var(--display);color:var(--stage-muted)}
+.cv .samt{font:600 20px/1.2 var(--display);color:var(--stage-ink)}
+.cv .speso{font:400 17px var(--body);color:var(--stage-muted)}
+.cv .counter{font:700 76px/1 var(--display);color:var(--stage-green);font-variant-numeric:tabular-nums}
+.cv .small{font:400 22px/1.4 var(--body);color:var(--stage-muted)}
+.cv .tags{display:flex;gap:12px;flex-wrap:wrap}
+.cv .tag3{font:600 20px var(--display);padding:10px 16px;border-radius:999px;background:var(--stage-2);border:1px solid var(--stage-line);color:var(--stage-ink)}
+.cv .gwrap{width:90px;height:90px}
+.cv .gwrap i{position:absolute;inset:13px;background:#F2B544;transform:rotate(45deg);border-radius:8px}
+.cv .gwrap b{position:relative;display:grid;place-items:center;height:100%;font:700 34px var(--display);color:#0C241C}
+.cv .gcard{padding:20px 22px;display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+.cv .gcard.on{opacity:1;transform:none}
+.cv .gcard h4{margin:0;font:600 24px var(--display);color:var(--stage-ink)}
+.cv .gcard ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cv .gcard li{display:flex;gap:10px;align-items:center;font:400 19px/1.3 var(--body);color:var(--stage-muted);transition:color .25s}
+.cv .gcard li i{flex:none;width:24px;height:24px;border-radius:6px;border:2px solid #3C6B5A;display:grid;place-items:center;transition:background .25s,border-color .25s}
+.cv .gcard li.ok{color:var(--stage-ink)}
+.cv .gcard li.ok i{background:#5FD39A;border-color:#5FD39A}
+.cv .gcard li.ok i::after{content:"";width:10px;height:6px;border-left:3px solid #0C241C;border-bottom:3px solid #0C241C;transform:rotate(-45deg) translate(1px,-1px)}
+.cv .gcard .rel{align-self:flex-start;font:700 18px var(--display);background:#F2B544;color:#0C241C;padding:8px 12px;border-radius:999px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s}
+.cv .gcard .rel.on{opacity:1;transform:none}
+.cv .tok{width:30px;height:30px;border-radius:50%;background:#5FD39A;box-shadow:0 0 0 8px rgba(95,211,154,.2),0 0 30px rgba(95,211,154,.5)}
+.cv .trackline{height:0;border-top:4px dotted #3C6B5A}
+.cv .pd{width:30px;height:30px;border-radius:50%}
+.cv .sq b{display:block;font:600 26px var(--display);color:var(--stage-ink);text-align:center}
+.cv .sq span{display:block;font:400 18px/1.3 var(--body);color:var(--stage-muted);text-align:center;margin-top:4px}
+.cv .partners{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.cv .partners span{font:600 20px var(--display);padding:10px 16px;border-radius:999px;background:var(--stage-2);border:1px solid var(--stage-line);color:var(--stage-ink)}
+.cv .glow{background:radial-gradient(circle at 30% 40%,rgba(95,211,154,.22),rgba(95,211,154,0) 60%)}
+.cv .huge{font:700 84px/1 var(--display);letter-spacing:-.02em}
+.cv .amb{font:600 40px/1.1 var(--display);color:var(--stage-amber)}
+.cv .dcard{background:#F3F1E8;color:#13241C;border-radius:20px;padding:24px 26px}
+.cv .dcard b{display:block;font:600 26px/1.2 var(--display)}
+.cv .dcard span{display:block;font:400 20px/1.35 var(--body);color:#44564C;margin-top:6px}
+.cv .ddia{width:34px;height:34px;background:#F2B544;transform:rotate(45deg);border-radius:6px}
+@media (prefers-reduced-motion:reduce){.cv .flow,.cv .typing i{animation:none}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Project Luntian</p>
+    <h1>The Luntian Story</h1>
+    <p class="lede">How Globe Telecom can build its own green AI that speaks Filipino, Taglish and Cebuano. Press play for a three-minute animated walkthrough, then explore the plan yourself below.</p>
+    <p class="byline">Prepared by Reekhil Khanna, AI consultant based in Singapore</p>
+    <nav class="links" aria-label="Contact">
+      <a href="mailto:reekhilkhanna@gmail.com">reekhilkhanna@gmail.com</a>
+      <a href="https://www.linkedin.com/in/reekhil-khanna-51603a67" target="_blank" rel="noopener">LinkedIn</a>
+    </nav>
+  </header>
+
+  <section class="player" id="player" aria-label="Animated story">
+    <div class="stage" id="stage">
+      <div class="canvas cv" id="canvas"></div>
+      <button class="bigplay" id="bigplay" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.8v12.4L14 8z" fill="currentColor"/></svg>Play the story, about 3 minutes</button>
+    </div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+    <div class="controls">
+      <button class="cbtn" id="prev" type="button" aria-label="Previous scene"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="cbtn primary" id="play" type="button"><span id="playicon"></span><span id="playlabel">Play</span></button>
+      <button class="cbtn" id="next" type="button" aria-label="Next scene"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 2.5 11 8l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="progress" id="progress" aria-label="Scenes"></div>
+      <span class="count" id="count">1 / 14</span>
+    </div>
+    <ol class="chapters" id="chapters"></ol>
+  </section>
+
+  <section class="explore" aria-labelledby="explore-title">
+    <p class="eyebrow">Explore the plan</p>
+    <h2 id="explore-title">Try it yourself</h2>
+    <p>Click through each phase, test the payback with your own numbers, and see how a gate decides whether money is released.</p>
+
+    <div class="tool" id="phase-tool">
+      <h3>What happens in each phase</h3>
+      <p class="hint">Pick a phase to see its months, budget, team, activities and the gate at the end.</p>
+      <div class="tabs" role="tablist" aria-label="Phases" id="phase-tabs"></div>
+      <div id="phase-panel" role="tabpanel"></div>
+    </div>
+
+    <div class="tool" id="pay-tool">
+      <h3>When does it pay back?</h3>
+      <p class="hint">Move the slider to change how much value Luntian brings each year from Year 2.</p>
+      <div class="pay-grid">
+        <div>
+          <div class="field">
+            <label for="val">Value each year from Year 2</label>
+            <output id="valout" for="val">₱600M</output>
+            <input type="range" id="val" min="300" max="1000" step="25" value="600">
+          </div>
+          <label class="check" for="slow"><input type="checkbox" id="slow"><span>Year 2 starts slowly and brings only half the value</span></label>
+          <div class="result" id="payresult" style="margin-top:18px"><p class="big" id="paybig"></p><p id="paytext"></p></div>
+          <p class="note">Cost is the US$14.4M plan plus about US$4.8M a year to run from Year 3. ₱62.5 per US$. The plan's base case is ₱600M a year; Globe reports ₱1.2B of AI value to date.</p>
+        </div>
+        <div class="chart" id="paychart"></div>
+      </div>
+    </div>
+
+    <div class="tool" id="gate-tool">
+      <h3>How a gate decides</h3>
+      <p class="hint">Tick the conditions that are met. Money for the next phase is released only when every one is true.</p>
+      <div class="tabs" role="tablist" aria-label="Gates" id="gate-tabs"></div>
+      <ul class="gate-list" id="gate-list"></ul>
+      <div class="verdict" id="verdict" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Figures come from the Project Luntian playbook and written proposal, with research as of 7 October 2026. Costs are upper-side estimates at ₱62.5 per US$. Value figures are illustrative until Phase 0 tests them with Globe's own numbers.</p>
+    <p>Sources include FilBench (2025), the Sahabat-AI, SEA-LION v3 and Llama 3.1 model cards, ML.ENERGY and AI Energy Score, TelecomTV (September 2026), STT GDC, ACEN and the National Privacy Commission. The written proposal lists every source and is available on request.</p>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const ease = p => 1 - Math.pow(1 - p, 3);
+  const easeIO = p => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+  const lerp = (a, b, p) => a + (b - a) * p;
+
+  let cur = null, playing = false, elapsed = 0, t0 = 0, raf = 0, ended = false, lastCap = '';
+
+  function A(el, frames, o) {
+    if (!el || !el.animate) return null;
+    const a = el.animate(frames, Object.assign({ duration: 700, delay: 0, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' }, o || {}));
+    if (!playing) a.pause();
+    cur.anims.push(a);
+    return a;
+  }
+  const fadeUp = (el, delay, dy = 24, duration = 700) => A(el, [{ opacity: 0, transform: 'translateY(' + dy + 'px)' }, { opacity: 1, transform: 'none' }], { delay, duration });
+  const fadeIn = (el, delay, duration = 600) => A(el, [{ opacity: 0 }, { opacity: 1 }], { delay, duration });
+  const pop = (el, delay, duration = 600) => A(el, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.06)', offset: .7 }, { opacity: 1, transform: 'none' }], { delay, duration });
+  const growX = (el, delay, duration = 900) => A(el, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { delay, duration, easing: 'cubic-bezier(.3,.7,.2,1)' });
+  const draw = (el, delay, duration = 1600) => A(el, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { delay, duration, easing: 'cubic-bezier(.45,0,.2,1)' });
+
+  const lab = (n, t) => '<p class="ab lab" style="left:64px;top:40px;width:1000px"><span class="num">' + String(n).padStart(2, '0') + '</span>' + t + '</p>';
+  const sh = (t, w) => '<h3 class="ab sh" style="left:64px;top:76px;width:' + (w || 1150) + 'px">' + t + '</h3>';
+  const ICON = {
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="#0C241C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="#0C241C" stroke-width="2" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+    leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="#0C241C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-9 6-15 15-15 0 9-6 15-14 15"/><path d="M5 20c3-5 6-7 10-9"/></svg>',
+    split: '<svg viewBox="0 0 24 24" fill="none" stroke="#0C241C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.5"/><path d="M7.5 12H12m0 0 6-6m-6 6 6 6M18 6h1M18 18h1"/></svg>',
+    gauge: '<svg viewBox="0 0 24 24" fill="none" stroke="#0C241C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 4-5"/></svg>'
+  };
+
+  function globe() {
+    let mer = '';
+    for (let k = 0; k < 6; k++) mer += '<ellipse cx="340" cy="340" rx="250" ry="250"><animate attributeName="rx" values="250;0;250" keyTimes="0;.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" dur="18s" begin="-' + (k * 3) + 's" repeatCount="indefinite"/></ellipse>';
+    const lat = [[-170, 183, 22], [-85, 235, 28], [0, 250, 30], [85, 235, 28], [170, 183, 22]].map(([d, rx, ry]) => '<ellipse cx="340" cy="' + (340 + d) + '" rx="' + rx + '" ry="' + ry + '"/>').join('');
+    const N = [[275, 265], [400, 290], [385, 430], [300, 410], [495, 365]];
+    const arcs = ['M275 265Q340 225 400 290', 'M400 290Q450 360 385 430', 'M275 265Q245 345 300 410', 'M300 410Q340 445 385 430', 'M400 290Q480 270 495 365'].map(d => '<path class="flow" d="' + d + '"/>').join('');
+    const nodes = N.map(([x, y]) => '<circle cx="' + x + '" cy="' + y + '" r="6"/>').join('');
+    const rings = N.map(([x, y], i) => { const b = '-' + (i * .6).toFixed(1) + 's'; return '<circle cx="' + x + '" cy="' + y + '" r="7"><animate attributeName="r" values="7;28" dur="2.4s" begin="' + b + '" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values=".8;0" dur="2.4s" begin="' + b + '" repeatCount="indefinite"/></circle>'; }).join('');
+    const orbit = 'M660 340A320 86 0 1 1 20 340A320 86 0 1 1 660 340';
+    return '<div class="ab globe" style="left:600px;top:20px;width:680px;height:680px"><svg viewBox="0 0 680 680" width="680" height="680" aria-hidden="true"><defs><radialGradient id="gg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#2FA36B" stop-opacity=".42"/><stop offset=".6" stop-color="#2FA36B" stop-opacity=".1"/><stop offset="1" stop-color="#2FA36B" stop-opacity="0"/></radialGradient><radialGradient id="gb" cx="38%" cy="34%" r="70%"><stop offset="0" stop-color="#1D5A42"/><stop offset="1" stop-color="#081A14"/></radialGradient><clipPath id="gc"><circle cx="340" cy="340" r="250"/></clipPath></defs><circle cx="340" cy="340" r="335" fill="url(#gg)"/><circle cx="340" cy="340" r="250" fill="url(#gb)"/><g clip-path="url(#gc)" fill="none" stroke="#5FD39A" stroke-opacity=".26" stroke-width="1.5">' + lat + mer + '</g><circle cx="340" cy="340" r="250" fill="none" stroke="#5FD39A" stroke-opacity=".55" stroke-width="2"/><g fill="none" stroke="#F2B544" stroke-opacity=".85" stroke-width="2.4" stroke-linecap="round">' + arcs + '</g><g fill="#F2B544">' + nodes + '</g><g fill="none" stroke="#F2B544" stroke-width="2">' + rings + '</g><g transform="rotate(-16 340 340)"><ellipse cx="340" cy="340" rx="320" ry="86" fill="none" stroke="#5FD39A" stroke-opacity=".22" stroke-width="1.5"/><circle r="8" fill="#F3F1E8"><animateMotion dur="12s" repeatCount="indefinite" path="' + orbit + '"/></circle><circle r="5" fill="#5FD39A"><animateMotion dur="12s" begin="-6s" repeatCount="indefinite" path="' + orbit + '"/></circle></g></svg></div>';
+  }
+
+  /* router geometry */
+  const RQ = [
+    { q: "Scam ba 'tong text na 'to?", tag: 'Taglish', r: 'Mukhang scam ito. Huwag i-click ang link.', y: 220 },
+    { q: 'Paano mag-upgrade ng plan ko?', tag: 'Taglish', r: "Sige po! Ito ang mga plan na puwede sa 'yo.", y: 365 },
+    { q: 'Summarise this 40-page contract', tag: 'English', r: 'Here are the key terms on one page.', y: 510 }
+  ];
+  const ROUTES = RQ.map(R => {
+    const pts = [[184, 365], [304, 365], [380, 365], [600, 365], [650, 365], [650, R.y], [700, R.y], [1000, R.y], [1040, R.y], [1040, 365], [1080, 365], [1155, 365]];
+    const cum = [0];
+    for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+    const L = cum[cum.length - 1];
+    return { pts, cum, L, fr0: cum[2] / L, fr1: cum[3] / L, fm: cum[6] / L };
+  });
+  function along(R, p) {
+    const d = p * R.L;
+    for (let i = 1; i < R.pts.length; i++) {
+      if (d <= R.cum[i] || i === R.pts.length - 1) {
+        const seg = R.cum[i] - R.cum[i - 1], f = seg ? clamp((d - R.cum[i - 1]) / seg) : 0;
+        return [lerp(R.pts[i - 1][0], R.pts[i][0], f), lerp(R.pts[i - 1][1], R.pts[i][1], f)];
+      }
+    }
+    return R.pts[R.pts.length - 1];
+  }
+
+  const STATS = [[2.8, v => v.toFixed(1) + 'x'], [50, v => Math.round(v) + '%'], [67.7, v => v.toFixed(1) + 'M'], [3000, v => (v >= 2999.5 ? '3,000+' : (Math.round(v / 10) * 10).toLocaleString('en-US'))]];
+  const STEPS = [
+    ['Collect', 'Licensed news, books and broadcasts, public Filipino web text, and Globe data with a lawful basis'],
+    ['Clean', 'Remove duplicates, spam, machine-translated and offensive text, and balance the languages'],
+    ['Protect privacy', 'Mask names, phone and account numbers and addresses. SIM registration records never enter'],
+    ['Teach Filipino', 'Continued training on tens of billions of tokens of Filipino, regional languages and English'],
+    ['Teach tasks', 'Fine-tune on worked examples written by Filipino annotators'],
+    ['Make it safe', 'Safety tuning, plus a Filipino and Taglish safety model that screens questions and answers'],
+    ['Test', 'Golden sets, FilBench, SEA-HELM, red teaming, bias checks and energy per 1,000 answers'],
+    ['Release and watch', 'Publish the model card, roll out gradually, and watch quality, safety, cost and energy daily']
+  ];
+  const SX = i => 110 + i * 151.43;
+  const X8 = m => 96 + m * (1088 / 24);
+  const PH8 = ['Prove: test models, data and pilots, then Gate 1.', 'Build: teach the models Filipino, make them safe and pilot them.', 'Scale: go live in customer care and launch for business.', 'Grow: more business clients, a second refresh and a back-up site.'];
+  const ACT = [['Mobilise', 1, 2], ['Data audit', 1, 6], ['Privacy check', 1, 6], ['Golden test sets', 2, 6], ['Model bake-off', 2, 8], ['Quick-win pilots', 3, 10], ['MLOps set-up', 2, 10], ['Partner and data terms', 4, 10], ['Capacity and energy plan', 4, 10], ['Business case', 8, 12], ['Gate 1 pack', 11, 12]];
+  const WX = w => 380 + w * 67;
+  const GX = [280, 640, 1000];
+  const STAYS = [[900, 3900], [4800, 7800], [8700, 11700]];
+  const GCARDS = [
+    ['Gate 1, month 3', ['Filipino test target met', '3 client letters signed', 'Privacy check approved'], 'Releases US$4.58M'],
+    ['Gate 2, month 9', ['Quality and safety met', 'Care pilot hits targets', 'Cost and energy on target'], 'Releases US$5.09M'],
+    ['Gate 3, month 18', ['Signed revenue on target', 'Care savings on target', 'Long-term path chosen'], 'Releases US$3.57M']
+  ];
+  const SQUADS = [['Model', 'Research lead, 4 model engineers', 5, 220, '#5FD39A'], ['Data', '2 data engineers, 2 linguists', 4, 500, '#9CCDAE'], ['Platform', '2 MLOps, 1 GreenOps analyst', 3, 780, '#F2B544'], ['Trust', 'Safety lead, privacy lead', 2, 1060, '#CFE6D6']];
+
+  const SCENES = [
+    { title: 'Meet Luntian', dur: 9000,
+      beats: [[0, 'This is Luntian, Globe’s own AI. Luntian means green in Tagalog.'], [4500, 'It will speak the way Filipinos really talk: Filipino, Taglish and Cebuano.']],
+      html: () => globe() + '<p class="ab eb" style="left:72px;top:222px;width:560px">A plan for Globe Telecom</p><h3 class="ab xl" style="left:64px;top:260px;width:620px" aria-label="Luntian">' + Array.from('Luntian').map(c => '<span class="ltr" aria-hidden="true">' + c + '</span>').join('') + '</h3><p class="ab sub" style="left:72px;top:404px;width:540px">Globe’s own green AI that speaks Filipino, Taglish and Cebuano</p><p class="ab note2" style="left:72px;top:540px;width:520px"><em>Luntian</em> means green in Tagalog</p>',
+      enter: r => { A($('.globe', r), [{ opacity: 0, transform: 'scale(.9)' }, { opacity: 1, transform: 'none' }], { duration: 1600 }); fadeUp($('.eb', r), 300); $$('.ltr', r).forEach((e, i) => A(e, [{ opacity: 0, transform: 'translateY(50px)' }, { opacity: 1, transform: 'none' }], { delay: 500 + i * 80, duration: 800 })); fadeUp($('.sub', r), 1400); fadeUp($('.note2', r), 2600); }
+    },
+    { title: 'The problem', dur: 12000,
+      beats: [[0, 'A customer asks in Taglish to upgrade their plan.'], [2800, 'On FilBench, a Filipino language test, the best AI model scores only about 73 out of 100.'], [6500, 'Customer data must also stay safe: privacy rules now cover AI training.'], [9000, 'And rivals are moving: PLDT and Smart have launched their own AI services.']],
+      html: () => lab(2, 'The problem') + '<div class="ab phone" style="left:96px;top:96px;width:300px;height:560px"><div class="screen"><p class="ph-top">Globe care chat</p><div class="bub me">Pa-upgrade naman ng plan ko, yung may mas maraming data</div><div class="typing"><i></i><i></i><i></i></div></div></div><p class="ab q1 body" style="left:480px;top:118px;width:720px">How well do today’s AI models handle Filipino?</p><div class="ab meter" style="left:480px;top:172px;width:640px;height:44px"><div class="fill" style="width:73%"></div></div><p class="ab mval" style="left:480px;top:228px;width:720px"><b>73 out of 100</b> is the best score on FilBench, a Filipino language test</p><div class="ab card c2" style="left:480px;top:318px;width:720px;height:120px"><div class="row"><div class="ic">' + ICON.lock + '</div><div><b>Customer data must stay safe</b><span>Privacy rules now cover AI training</span></div></div></div><div class="ab card c3" style="left:480px;top:466px;width:720px;height:120px"><div class="row"><div class="ic">' + ICON.bolt + '</div><div><b>Rivals are moving</b><span>PLDT launched Pilipinas AI in 2025; Smart launched AI.Smart in 2026</span></div></div></div>',
+      enter: r => { A($('.phone', r), [{ opacity: 0, transform: 'translateX(-60px)' }, { opacity: 1, transform: 'none' }], { duration: 900 }); pop($('.bub', r), 800); fadeIn($('.typing', r), 1600); fadeUp($('.q1', r), 2800); fadeIn($('.meter', r), 3000); growX($('.fill', r), 3200, 1800); fadeUp($('.mval', r), 4600); fadeUp($('.c2', r), 6500); fadeUp($('.c3', r), 9000); }
+    },
+    { title: 'Globe’s head start', dur: 10000,
+      beats: [[0, 'Globe is not starting from zero.'], [1500, 'Its AI already returns 2.8 times its cost: about ₱1.2B of value so far.'], [4500, 'Globe owns half of STT GDC Philippines, a data centre on renewable supply.'], [7000, 'And it serves 67.7 million mobile customers.']],
+      html: () => lab(3, 'Globe’s head start') + sh('Globe already has the hard parts') + [['return on Globe’s AI so far, about ₱1.2B of value', 96, 172], ['owner of STT GDC Philippines, which runs on renewable supply', 656, 172], ['mobile customers who could talk to Luntian', 96, 404], ['Globe sites moving to renewable power with ACEN by 2028', 656, 404]].map(([l, x, y], i) => '<div class="ab card stat s' + i + '" style="left:' + x + 'px;top:' + y + 'px;width:528px;height:206px"><p class="big">0</p><p class="lbl">' + l + '</p></div>').join(''),
+      enter: r => { fadeUp($('.sh', r), 0); $$('.stat', r).forEach((e, i) => pop(e, 200 + i * 700)); },
+      update: (r, t) => { const els = r._c || (r._c = $$('.big', r)); els.forEach((e, i) => { const p = ease(clamp((t - (300 + i * 700)) / 1300)); const s = STATS[i][1](STATS[i][0] * p); if (e.textContent !== s) e.textContent = s; }); }
+    },
+    { title: 'Adapt, don’t build', dur: 12500,
+      beats: [[0, 'There are two ways for Globe to get its own AI.'], [1200, 'Building from scratch takes about 24 months and about US$33M.'], [4200, 'Adapting proven open models goes live in 12 months, for about US$14.4M.'], [9000, 'It is like hiring a bright graduate and training them, instead of raising someone from birth.']],
+      html: () => { const px = 860 / 24; let ticks = ''; [0, 6, 12, 18, 24].forEach(m => { ticks += '<p class="ab tick" style="left:' + (330 + m * px - 30) + 'px;top:394px;width:60px">' + m + '</p>'; });
+        return lab(4, 'Two ways to build') + sh('Adapt, don’t build from zero') + '<div class="ab lane-l" style="left:64px;top:190px;width:250px"><b>Build from scratch</b><span>about US$33M</span></div><div class="ab track" style="left:330px;top:200px;width:860px;height:44px"><div class="tfill build fill-b"></div><div class="runner run-b"></div></div><p class="ab flag fb" style="left:978px;top:146px;white-space:nowrap">Live at month 24</p><div class="ab lane-l" style="left:64px;top:300px;width:250px"><b>Adapt open models</b><span>about US$14.4M</span></div><div class="ab track" style="left:330px;top:310px;width:860px;height:44px"><div class="tfill adapt fill-a"></div><div class="tfill live fill-l"></div><div class="runner run-a"></div></div><p class="ab flag fa" style="left:' + (330 + 12 * px - 106) + 'px;top:256px;white-space:nowrap">Live at month 12</p><div class="ab axis" style="left:330px;top:384px;width:860px"></div>' + ticks + '<p class="ab tick" style="left:330px;top:428px;width:860px">Months from approval</p><div class="ab card an" style="left:64px;top:500px;width:1152px;height:130px"><div class="row"><div class="ic">' + ICON.leaf + '</div><div><b>Building from scratch is like raising a new employee from birth.</b><span>Adapting is like hiring a bright graduate and training them at Globe.</span></div></div></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); $$('.lane-l', r).forEach((e, i) => fadeUp(e, 200 + i * 200)); $$('.track', r).forEach((e, i) => fadeIn(e, 300 + i * 200)); fadeUp($('.an', r), 9000); },
+      update: (r, t) => { const c = r._c || (r._c = { fb: $('.fill-b', r), rb: $('.run-b', r), fa: $('.fill-a', r), fl: $('.fill-l', r), ra: $('.run-a', r), flb: $('.fb', r), fla: $('.fa', r) });
+        const px = 860 / 24, m = 24 * clamp((t - 1200) / 6600), w = m * px;
+        c.fb.style.width = w + 'px'; c.rb.style.left = w + 'px';
+        c.fa.style.width = Math.min(m, 12) * px + 'px'; c.fl.style.left = 12 * px + 'px'; c.fl.style.width = Math.max(0, m - 12) * px + 'px'; c.ra.style.left = w + 'px';
+        c.flb.classList.toggle('on', m >= 23.95); c.fla.classList.toggle('on', m >= 12); }
+    },
+    { title: 'How it works', dur: 14000,
+      beats: [[0, 'Every question first goes to a router.'], [900, 'A quick check, like spotting a scam text, goes to the small Edge model.'], [4000, 'An everyday question in Taglish goes to the Core model.'], [8000, 'A long or hard task goes to the Expert model.'], [12000, 'Small models answer most questions, which saves money and energy.']],
+      html: () => lab(5, 'How it works') + sh('The right model for each question', 800) + '<svg class="ab wires" style="left:0;top:0" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"><defs><filter id="bl" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="6"/></filter></defs><g stroke="#3C6B5A" stroke-width="3" fill="none" stroke-linecap="round"><path d="M304 365H380"/><path d="M600 365H700"/><path d="M650 220V510"/><path d="M650 220H700"/><path d="M650 510H700"/><path d="M1000 220H1040"/><path d="M1000 510H1040"/><path d="M1040 220V510"/><path d="M1000 365H1080"/><path d="M490 410V618H700" stroke-dasharray="8 8"/></g><circle class="dotglow" r="20" fill="#F2B544" filter="url(#bl)" style="opacity:0"/><circle class="dot" r="10" fill="#F2B544" style="opacity:0"/></svg><div class="ab qb" style="left:64px;top:150px;width:470px;height:120px"><span class="tag">Taglish</span><p class="qt">' + RQ[1].q + '</p></div><div class="ab reply" style="left:900px;top:84px;width:330px">' + RQ[0].r + '</div><div class="ab node n-q" style="left:64px;top:320px;width:240px;height:90px"><b>A question</b></div><div class="ab node n-r" style="left:380px;top:320px;width:220px;height:90px"><b>Router</b><span>picks the size</span></div><div class="ab node n-m" style="left:700px;top:170px;width:300px;height:100px"><b>Edge</b><span>Small, on phones and the network</span></div><div class="ab node n-m" style="left:700px;top:315px;width:300px;height:100px"><b>Core</b><span>Everyday care and business chats</span></div><div class="ab node n-m" style="left:700px;top:460px;width:300px;height:100px"><b>Expert</b><span>Long documents and hard cases</span></div><div class="ab node n-a" style="left:1080px;top:315px;width:150px;height:100px"><b>Answer</b></div><div class="ab node n-b" style="left:700px;top:590px;width:530px;height:56px"><span>Backup: outside AI, never with personal data</span></div>',
+      enter: r => { fadeUp($('.sh', r), 0); fadeIn($('.wires', r), 100); $$('.node', r).forEach((e, i) => fadeUp(e, 150 + i * 90, 16)); fadeUp($('.qb', r), 250); },
+      update: (r, t) => { const c = r._c || (r._c = { dot: $('.dot', r), glow: $('.dotglow', r), qt: $('.qt', r), tag: $('.tag', r), reply: $('.reply', r), router: $('.n-r', r), ans: $('.n-a', r), models: $$('.n-m', r) });
+        if (t < 12000) {
+          const k = Math.floor(t / 4000), lt = t - k * 4000, R = RQ[k], P = ROUTES[k];
+          if (c.qt.textContent !== R.q) { c.qt.textContent = R.q; c.tag.textContent = R.tag; c.reply.textContent = R.r; }
+          const p = clamp((lt - 300) / 2100), e = easeIO(p), xy = along(P, e), vis = p > 0 && p < 1;
+          c.dot.setAttribute('cx', xy[0]); c.dot.setAttribute('cy', xy[1]); c.glow.setAttribute('cx', xy[0]); c.glow.setAttribute('cy', xy[1]);
+          c.dot.style.opacity = vis ? 1 : 0; c.glow.style.opacity = vis ? .45 : 0;
+          c.router.classList.toggle('lit', vis && e >= P.fr0 - .02 && e <= P.fr1 + .06);
+          c.models.forEach((m, i) => { m.classList.remove('soft'); m.classList.toggle('lit', i === k && e >= P.fm - .01); });
+          c.ans.classList.toggle('lit', lt >= 2400);
+          c.reply.classList.toggle('on', lt >= 2400 && lt < 3900);
+        } else {
+          c.dot.style.opacity = 0; c.glow.style.opacity = 0; c.router.classList.remove('lit'); c.ans.classList.remove('lit'); c.reply.classList.remove('on');
+          c.models.forEach(m => { m.classList.remove('lit'); m.classList.add('soft'); });
+          if (c.qt.textContent !== RQ[1].q) { c.qt.textContent = RQ[1].q; c.tag.textContent = RQ[1].tag; }
+        } }
+    },
+    { title: 'Teaching Filipino', dur: 12500,
+      beats: [[0, 'This is how an open model learns to understand Filipinos.'], [2900, 'Personal data is masked before training. SIM registration records never enter.'], [5800, 'Then the model learns Filipino, Globe’s tasks and safety rules.'], [10150, 'Every release is tested, published with a model card and watched daily.']],
+      html: () => { let s = ''; STEPS.forEach((st, i) => { const x = SX(i); s += '<div class="ab st" style="left:' + (x - 34) + 'px;top:266px">' + (i + 1) + '</div><p class="ab stl" style="left:' + (x - 72) + 'px;top:348px;width:144px">' + st[0] + '</p>'; });
+        return lab(6, 'Teaching Filipino') + sh('How the model learns Filipino') + '<div class="ab rail" style="left:110px;top:298px;width:1060px"></div>' + s + '<div class="ab pk" style="left:93px;top:283px"></div><div class="ab card detail" style="left:96px;top:440px;width:1088px;height:186px"><small class="dnum">Step 1 of 8</small><b class="dname">' + STEPS[0][0] + '</b><span class="dtext">' + STEPS[0][1] + '</span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); fadeIn($('.rail', r), 100); $$('.st', r).forEach((e, i) => pop(e, 150 + i * 80)); $$('.stl', r).forEach((e, i) => fadeIn(e, 300 + i * 80)); fadeUp($('.detail', r), 600); },
+      update: (r, t) => { const c = r._c || (r._c = { st: $$('.st', r), sl: $$('.stl', r), pk: $('.pk', r), dn: $('.dname', r), dt: $('.dtext', r), di: $('.dnum', r) });
+        const D = 1450, idx = Math.min(7, Math.floor(t / D)), lt = t - idx * D;
+        let x = SX(idx); if (idx < 7 && lt > 1000) x = lerp(SX(idx), SX(idx + 1), easeIO(clamp((lt - 1000) / 450)));
+        c.pk.style.left = (x - 17) + 'px';
+        c.st.forEach((s, j) => { s.classList.toggle('on', j === idx); s.classList.toggle('done', j < idx); });
+        c.sl.forEach((s, j) => s.classList.toggle('on', j === idx));
+        if (c.dn.textContent !== STEPS[idx][0]) { c.dn.textContent = STEPS[idx][0]; c.dt.textContent = STEPS[idx][1]; c.di.textContent = 'Step ' + (idx + 1) + ' of 8'; } }
+    },
+    { title: 'Green by design', dur: 10500,
+      beats: [[0, 'Training a new model from scratch emits about 1,640 tonnes of CO2e.'], [3600, 'Adapting an open model emits about 17 tonnes. That is about 99% less.'], [6500, 'Luntian also runs on renewable-backed power and keeps every answer lean.']],
+      html: () => lab(7, 'Green by design') + sh('About 99% less carbon per model') + '<p class="ab body l1" style="left:96px;top:188px;width:900px">Build one model from scratch</p><div class="ab barx b1x" style="left:96px;top:228px;width:900px;height:56px;background:#6E8C7E"></div><p class="ab val v1" style="left:1012px;top:228px;width:240px">1,640 tonnes</p><p class="ab body l2" style="left:96px;top:314px;width:900px">Adapt an open model, the Luntian way</p><div class="ab barx b2x" style="left:96px;top:354px;width:10px;height:56px;background:#5FD39A"></div><p class="ab val v2" style="left:124px;top:354px;width:300px;color:#5FD39A">17 tonnes</p><div class="ab badge" style="left:980px;top:300px">−99%</div><div class="ab card chip3 k1" style="left:96px;top:470px;width:352px;height:150px"><div class="ic">' + ICON.leaf + '</div><p>Renewable-backed power at STT GDC Philippines</p></div><div class="ab card chip3 k2" style="left:464px;top:470px;width:352px;height:150px"><div class="ic">' + ICON.split + '</div><p>Mixture-of-experts uses about 3.6 times less energy per word</p></div><div class="ab card chip3 k3" style="left:832px;top:470px;width:352px;height:150px"><div class="ic">' + ICON.gauge + '</div><p>Reasoning mode only when needed; it uses about 30 times more energy</p></div><p class="ab tick" style="left:96px;top:648px;width:1088px;text-align:left">Tonnes of CO2e to train one model at the Philippine grid average, from published GPU-hours</p>',
+      enter: r => { fadeUp($('.sh', r), 0); fadeIn($('.l1', r), 300); growX($('.b1x', r), 600, 2400); fadeIn($('.v1', r), 3000); fadeIn($('.l2', r), 3300); pop($('.b2x', r), 3600); fadeIn($('.v2', r), 3900); pop($('.badge', r), 4600, 700); fadeUp($('.k1', r), 6500); fadeUp($('.k2', r), 7100); fadeUp($('.k3', r), 7700); }
+    },
+    { title: 'The roadmap', dur: 13500,
+      beats: [[0, 'The plan runs for 24 months, in four phases.'], [1000, 'Phase 0, Prove: three months to test models, data and pilots.'], [2250, 'Gate 1 at month 3. Phase 1, Build: teach the models Filipino and make them safe.'], [4750, 'Gate 2 at month 9. Phase 2a, Scale: go live and launch for business.'], [6000, 'Month 12: Luntian is live in customer care.'], [8500, 'Gate 3 at month 18. Phase 2b, Grow: more clients and a second refresh.'], [11000, 'Leadership releases the money for each phase only at its gate.']],
+      html: () => { const B = [[0, 3, 'Prove', 'US$1.17M'], [3, 9, 'Build', 'US$4.58M'], [9, 18, 'Scale', 'US$5.09M'], [18, 24, 'Grow', 'US$3.57M']]; let s = '';
+        B.forEach(([a, b, n, u], i) => { const l = X8(a) + (i ? 2 : 0), rr = X8(b) - (i < 3 ? 2 : 0); s += '<div class="ab band b' + i + '" style="left:' + l + 'px;top:300px;width:' + (rr - l) + 'px;height:120px"><b>' + n + '</b><span>' + u + '</span></div>'; });
+        [3, 9, 18].forEach((g, i) => { s += '<div class="ab dia" style="left:' + (X8(g) - 14) + 'px;top:456px"></div><p class="ab glab" style="left:' + (X8(g) - 60) + 'px;top:492px;width:120px">Gate ' + (i + 1) + '</p>'; });
+        return lab(8, 'The roadmap') + sh('The 24-month roadmap') + '<p class="ab pill hide" style="left:' + (X8(12) - 140) + 'px;top:226px;width:280px">Month 12: live in care</p><div class="ab stem hide" style="left:' + (X8(12) - 1.5) + 'px;top:270px;height:30px"></div>' + s + '<div class="ab axis" style="left:96px;top:469px;width:1088px"></div><p class="ab tick" style="left:66px;top:492px;width:60px">0</p><p class="ab tick" style="left:1154px;top:492px;width:60px">24</p><div class="ab mk" style="left:94px;top:290px;height:180px"></div><div class="ab mkdot" style="left:88px;top:462px"></div><p class="ab mklab" style="left:36px;top:524px;width:120px">Month 0</p><p class="ab phtext" style="left:96px;top:590px;width:1088px">' + PH8[0] + '</p>'; },
+      enter: r => { fadeUp($('.sh', r), 0); $$('.band', r).forEach((e, i) => growX(e, 200 + i * 220, 700)); fadeIn($('.axis', r), 100); $$('.dia', r).forEach((e, i) => fadeIn(e, 600 + i * 150)); },
+      update: (r, t) => { const c = r._c || (r._c = { bands: $$('.band', r), gates: $$('.dia', r), mk: $('.mk', r), md: $('.mkdot', r), ml: $('.mklab', r), pill: $('.pill', r), stem: $('.stem', r), tx: $('.phtext', r) });
+        const m = 24 * clamp((t - 1000) / 10000), x = X8(m);
+        c.mk.style.left = (x - 1.5) + 'px'; c.md.style.left = (x - 8) + 'px'; c.ml.style.left = (x - 60) + 'px';
+        const lbl = 'Month ' + Math.floor(m + 1e-6); if (c.ml.textContent !== lbl) c.ml.textContent = lbl;
+        const pi = m < 3 ? 0 : m < 9 ? 1 : m < 18 ? 2 : 3;
+        c.bands.forEach((b, i) => b.classList.toggle('on', i === pi));
+        [3, 9, 18].forEach((g, i) => c.gates[i].classList.toggle('hit', m >= g));
+        c.pill.classList.toggle('hide', m < 12); c.stem.classList.toggle('hide', m < 12);
+        if (c.tx.textContent !== PH8[pi]) c.tx.textContent = PH8[pi]; }
+    },
+    { title: 'The first 90 days', dur: 12500,
+      beats: [[0, 'Phase 0 is the first money committed: US$1.17M for 90 days.'], [2500, 'Weeks 1 to 6: set up the team, audit the data, check privacy and write 1,000 test questions.'], [5800, 'Weeks 2 to 10: compare five or six models and run two quick pilots.'], [9000, 'Weeks 8 to 12: build the business case with three client letters, then Gate 1: go or stop.']],
+      html: () => { let s = '<p class="ab wk" style="left:300px;top:144px;width:70px;text-align:right">Week</p>';
+        for (let w = 1; w <= 12; w++) s += '<p class="ab wk" style="left:' + (WX(w - 1)) + 'px;top:144px;width:67px">' + w + '</p>';
+        ACT.forEach(([n, a, b], i) => { const y = 182 + i * 38; s += '<p class="ab rl" style="left:64px;top:' + y + 'px;width:300px">' + n + '</p><div class="ab rbar" style="left:' + (WX(a - 1) + 2) + 'px;top:' + y + 'px;width:' + ((b - a + 1) * 67 - 4) + 'px"><i></i></div>'; });
+        return lab(9, 'The first 90 days') + sh('Week by week to Gate 1', 600) + s + '<div class="ab wline" style="left:379px;top:172px;height:420px"></div><p class="ab wchip" style="left:336px;top:600px">Week 1</p><div class="ab g1" style="left:700px;top:640px;width:484px"><b>Gate 1: go or stop</b><span class="ddia" style="width:26px;height:26px;background:#F2B544;transform:rotate(45deg);border-radius:4px;display:block"></span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); $$('.rl', r).forEach((e, i) => fadeIn(e, 100 + i * 60)); $$('.rbar', r).forEach((e, i) => fadeIn(e, 150 + i * 60)); },
+      update: (r, t) => { const c = r._c || (r._c = { fills: $$('.rbar i', r), wl: $('.wline', r), wc: $('.wchip', r), g1: $('.g1', r) });
+        const w = 12 * clamp((t - 500) / 10000);
+        c.fills.forEach((f, i) => { const a = ACT[i][1], b = ACT[i][2]; f.style.width = (clamp((w - (a - 1)) / (b - a + 1)) * 100) + '%'; });
+        const x = WX(w); c.wl.style.left = (x - 1) + 'px'; c.wc.style.left = (x - 44) + 'px';
+        const lbl = 'Week ' + Math.min(12, Math.max(1, Math.ceil(w))); if (c.wc.textContent !== lbl) c.wc.textContent = lbl;
+        c.g1.classList.toggle('on', w >= 11.99); }
+    },
+    { title: 'What it costs', dur: 11000,
+      beats: [[0, 'The full plan costs about US$14.4M over two years, about ₱901M.'], [3800, 'It is paid in four parts, each released at a gate. Only Phase 0, US$1.17M, is committed first.'], [7000, 'People and data are the biggest costs. Training compute is only about 13%.']],
+      html: () => { const P = [['Phase 0', 'US$1.17M', '₱73M', 96, 183.6, '#2F8F60'], ['Phase 1: Build', 'US$4.58M', '₱286M', 186.6, 529.6, '#4E9E70'], ['Phase 2a: Scale', 'US$5.09M', '₱318M', 532.6, 913.7, '#7DBB93'], ['Phase 2b: Grow', 'US$3.57M', '₱223M', 916.7, 1184, '#A9D3B6']]; let s = '';
+        P.forEach(([n, u, p, a, b, col], i) => { const off = i ? 10 : 0; s += '<p class="ab slab sl' + i + '" style="left:' + a + 'px;top:208px;width:' + Math.max(150, b - a) + 'px">' + n + '</p><div class="ab sg sg' + i + '" style="left:' + a + 'px;top:240px;width:' + (b - a) + 'px;height:90px;background:' + col + ';border-radius:' + (i === 0 ? '12px 0 0 12px' : i === 3 ? '0 12px 12px 0' : '0') + '"></div><p class="ab samt sa' + i + '" style="left:' + (a + off) + 'px;top:342px;width:' + Math.max(100, b - a - off) + 'px">' + u + '</p><p class="ab speso sp' + i + '" style="left:' + (a + off) + 'px;top:370px;width:120px">' + p + '</p>'; });
+        return lab(10, 'What it costs') + sh('Paid in four parts') + '<p class="ab pill today" style="left:96px;top:148px;width:400px;padding:10px 14px;white-space:nowrap">Only this part is committed first</p>' + s + '<p class="ab counter" style="left:96px;top:430px;width:600px">US$0.0M</p><p class="ab small tot" style="left:96px;top:516px;width:700px">over two years, about ₱901M, with 15% contingency</p><div class="ab tags" style="left:96px;top:590px;width:1088px"><span class="tag3 t1">People 35%</span><span class="tag3 t2">Data 15%</span><span class="tag3 t3">Training compute 13%</span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); [0, 1, 2, 3].forEach(i => { const d = 600 + i * 700; A($('.sg' + i, r), [{ opacity: 0, transform: 'translateY(-60px)' }, { opacity: 1, transform: 'none' }], { delay: d, duration: 600, easing: 'cubic-bezier(.3,1.4,.5,1)' }); fadeIn($('.sl' + i, r), d + 100); fadeIn($('.sa' + i, r), d + 200); fadeIn($('.sp' + i, r), d + 250); }); pop($('.today', r), 3800); fadeIn($('.counter', r), 400); fadeIn($('.tot', r), 3400); fadeUp($('.t1', r), 7000); fadeUp($('.t2', r), 7400); fadeUp($('.t3', r), 7800); },
+      update: (r, t) => { const e = r._c || (r._c = $('.counter', r)); const s = 'US$' + (14.41 * ease(clamp((t - 600) / 2800))).toFixed(1) + 'M'; if (e.textContent !== s) e.textContent = s; }
+    },
+    { title: 'When it pays back', dur: 11500,
+      beats: [[0, 'This line is the total cost to Globe, including running costs from Year 3.'], [3000, 'Value needs to reach about ₱600M a year from Year 2.'], [6000, 'Then value catches up with cost by the end of Year 3.'], [8500, 'If Year 2 starts slowly, payback moves to the end of Year 4.']],
+      html: () => { const Y = v => 600 - v * 14.667; let g = '';
+        [0, 10, 20, 30].forEach(v => { g += '<line x1="160" y1="' + Y(v) + '" x2="1140" y2="' + Y(v) + '" stroke="' + (v ? '#21483B' : '#3C6B5A') + '" stroke-width="2"/>'; });
+        let lbl = ''; [0, 10, 20, 30].forEach(v => { lbl += '<p class="ab tick" style="left:96px;top:' + (Y(v) - 12) + 'px;width:52px;text-align:right">' + v + '</p>'; });
+        ['Start', 'Year 1', 'Year 2', 'Year 3', 'Year 4'].forEach((n, i) => { lbl += '<p class="ab tick" style="left:' + (160 + i * 240 - 50) + 'px;top:614px;width:100px">' + n + '</p>'; });
+        return lab(11, 'When it pays back') + sh('Value catches up with cost', 700) + '<p class="ab tick" style="left:160px;top:128px;width:120px;text-align:left">US$M</p><svg class="ab" style="left:0;top:0" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true">' + g + '<path class="pc" d="M160 600L400 491.5L640 388.8L880 318.4L1120 248" pathLength="1" stroke-dasharray="1" fill="none" stroke="#C9D5CD" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path class="pv" d="M160 600L400 600L640 459.2L880 318.4L1120 177.6" pathLength="1" stroke-dasharray="1" fill="none" stroke="#5FD39A" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><path class="ps" d="M160 600L400 600L640 529.6L880 388.8L1120 248" fill="none" stroke="#5FD39A" stroke-opacity=".7" stroke-width="4" stroke-dasharray="12 10" stroke-linecap="round"/><circle class="be" cx="880" cy="318.4" r="16" fill="none" stroke="#F2B544" stroke-width="5"/><circle class="be2" cx="1120" cy="248" r="16" fill="none" stroke="#F2B544" stroke-width="4" stroke-dasharray="6 5"/></svg>' + lbl + '<p class="ab pill bel" style="left:620px;top:244px;width:240px;padding:10px 12px">Break-even, Year 3</p><div class="ab card need" style="left:180px;top:170px;width:380px;height:96px"><div class="row" style="padding:0 22px"><div><b style="font-size:24px">About ₱600M a year</b><span style="font-size:19px">of value needed from Year 2</span></div></div></div><div class="ab tags" style="left:760px;top:132px;width:440px;justify-content:flex-end"><span class="tag3" style="font-size:17px">Cost</span><span class="tag3" style="font-size:17px;color:#5FD39A">Value</span><span class="tag3" style="font-size:17px;color:#A9C2B4">Dashed: slow start</span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); draw($('.pc', r), 600, 2400); fadeUp($('.need', r), 3000); draw($('.pv', r), 3600, 2400); pop($('.be', r), 6000); pop($('.bel', r), 6100); fadeIn($('.ps', r), 8500, 900); pop($('.be2', r), 9300); }
+    },
+    { title: 'Safe steps', dur: 13000,
+      beats: [[0, 'Money is released in steps, only when results are real.'], [900, 'Gate 1 at month 3: tests passed, client letters signed, privacy approved. US$4.58M is released.'], [4800, 'Gate 2 at month 9: pilots meet quality, safety, cost and energy targets. US$5.09M is released.'], [8700, 'Gate 3 at month 18: revenue on target and the long-term path chosen. US$3.57M is released.']],
+      html: () => { let s = '<div class="ab trackline" style="left:96px;top:228px;width:1088px"></div>';
+        GX.forEach((x, i) => { s += '<div class="ab gwrap" style="left:' + (x - 45) + 'px;top:185px"><i></i><b>' + (i + 1) + '</b></div>'; });
+        GCARDS.forEach(([h, items, rel], i) => { s += '<div class="ab card gcard" style="left:' + (GX[i] - 160) + 'px;top:300px;width:320px"><h4>' + h + '</h4><ul>' + items.map(it => '<li><i></i>' + it + '</li>').join('') + '</ul><span class="rel">' + rel + '</span></div>'; });
+        return lab(12, 'Safe steps') + sh('Money comes in three safe steps') + s + '<div class="ab tok" style="left:81px;top:215px"></div><p class="ab body bott" style="left:96px;top:620px;width:1088px">If a gate is missed, Globe stops or fixes. It never pays for the next step early.</p>'; },
+      enter: r => { fadeUp($('.sh', r), 0); $$('.gwrap', r).forEach((e, i) => pop(e, 200 + i * 150)); fadeUp($('.bott', r), 12000); },
+      update: (r, t) => { const c = r._c || (r._c = { tok: $('.tok', r), cards: $$('.gcard', r).map(card => ({ card, lis: $$('li', card), rel: $('.rel', card) })) });
+        let x;
+        if (t < 900) x = lerp(96, 280, easeIO(t / 900)); else if (t < 3900) x = 280; else if (t < 4800) x = lerp(280, 640, easeIO((t - 3900) / 900)); else if (t < 7800) x = 640; else if (t < 8700) x = lerp(640, 1000, easeIO((t - 7800) / 900)); else if (t < 11700) x = 1000; else x = lerp(1000, 1184, easeIO(clamp((t - 11700) / 900)));
+        c.tok.style.left = (x - 15) + 'px';
+        c.cards.forEach((o, i) => { const s0 = STAYS[i][0]; o.card.classList.toggle('on', t >= s0); o.lis.forEach((li, j) => li.classList.toggle('ok', t >= s0 + 400 + j * 500)); o.rel.classList.toggle('on', t >= s0 + 2000); }); }
+    },
+    { title: 'Who builds it', dur: 10500,
+      beats: [[0, 'A core team of 16 people builds Luntian inside AIDE, Globe’s AI group.'], [3500, 'They work in four squads: Model, Data, Platform and Trust.'], [6500, 'Partners such as AI Singapore, Singapore’s national AI programme, and Philippine universities work alongside, then hand over.']],
+      html: () => { let s = '', idx = 0;
+        [[610, 168], [670, 168]].forEach(([x, y]) => { s += '<div class="ab pd" data-i="' + (idx++) + '" style="left:' + (x - 15) + 'px;top:' + (y - 15) + 'px;background:#F3F1E8"></div>'; });
+        s += '<p class="ab sq" style="left:440px;top:196px;width:400px"><span>Programme lead and product owner</span></p>';
+        SQUADS.forEach(([n, d, cnt, cx, col]) => { const cols = Math.min(cnt, 3); for (let k = 0; k < cnt; k++) { const x = cx + ((k % 3) - (cols - 1) / 2) * 42, y = 340 + Math.floor(k / 3) * 42; s += '<div class="ab pd" data-i="' + (idx++) + '" style="left:' + (x - 15) + 'px;top:' + (y - 15) + 'px;background:' + col + '"></div>'; } s += '<div class="ab sq sqn" style="left:' + (cx - 130) + 'px;top:430px;width:260px"><b>' + n + '</b><span>' + d + '</span></div>'; });
+        return lab(13, 'Who builds it') + sh('A team of 16, plus partners', 700) + s + '<div class="ab partners" style="left:96px;top:572px;width:1088px"><span>AI Singapore</span><span>Philippine universities</span><span>STT GDC Philippines</span><span>ACEN</span><span>NVIDIA</span><span>DOST and DICT</span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); $$('.pd', r).forEach((e, i) => { const ang = i * 2.4, dx = Math.cos(ang) * 520, dy = Math.sin(ang) * 300; A(e, [{ opacity: 0, transform: 'translate(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px) scale(.4)' }, { opacity: 1, transform: 'none' }], { delay: 200 + i * 90, duration: 1100, easing: 'cubic-bezier(.2,.8,.2,1)' }); }); $$('.sq', r).forEach((e, i) => fadeUp(e, 1800 + i * 300, 14)); $$('.partners span', r).forEach((e, i) => fadeUp(e, 6500 + i * 180, 14)); }
+    },
+    { title: 'The decision', dur: 9500,
+      beats: [[0, 'The first decision is small and safe.'], [2500, 'Approve Phase 0: US$1.17M for 90 days.'], [5000, 'In 12 weeks Globe gets two pilots, a model shortlist and a business case.'], [7500, 'Then it decides: go, or stop and keep what was built.']],
+      html: () => '<div class="ab glow" style="left:0;top:0;width:1280px;height:720px"></div>' + lab(14, 'The decision') + '<p class="ab eb" style="left:64px;top:150px;width:800px">The first decision</p><p class="ab huge h1x" style="left:64px;top:190px;width:1150px">Approve Phase 0</p><p class="ab amb a1x" style="left:64px;top:292px;width:1150px">US$1.17M (₱73M) for 90 days</p>' + [['Two working pilots', 'in customer care and for Globe staff'], ['A scored model shortlist', 'tested on 1,000 real Globe questions'], ['A business case', 'backed by letters from three clients']].map(([b, s2], i) => '<div class="ab dcard d' + i + '" style="left:' + (64 + i * 384) + 'px;top:390px;width:360px;height:150px"><b>' + b + '</b><span>' + s2 + '</span></div>').join('') + '<div class="ab" style="left:64px;top:590px;width:900px;display:flex;align-items:center;gap:18px"><span class="ddia wk12d"></span><b class="wk12" style="font:600 28px var(--display)">Week 12: Gate 1, go or stop</b></div>',
+      enter: r => { fadeIn($('.glow', r), 0, 1200); fadeUp($('.eb', r), 200); fadeUp($('.h1x', r), 2500, 30, 800); fadeUp($('.a1x', r), 3000); [0, 1, 2].forEach(i => fadeUp($('.d' + i, r), 5000 + i * 300)); fadeIn($('.wk12d', r), 7500); fadeUp($('.wk12', r), 7600); }
+    }
+  ];
+
+  /* engine */
+  const canvas = $('#canvas'), stage = $('#stage'), cap = $('#caption'), playBtn = $('#play'), bigPlay = $('#bigplay'), count = $('#count');
+  const sceneEls = [];
+  const total = SCENES.length;
+  const prog = $('#progress');
+  SCENES.forEach((S, i) => { const b = document.createElement('button'); b.className = 'seg'; b.type = 'button'; b.style.flex = String(S.dur); b.setAttribute('aria-label', 'Scene ' + (i + 1) + ': ' + S.title); b.innerHTML = '<span></span>'; b.addEventListener('click', () => go(i)); prog.appendChild(b); });
+  const segs = $$('.seg', prog);
+  const chap = $('#chapters');
+  SCENES.forEach((S, i) => { const li = document.createElement('li'); li.innerHTML = '<button type="button"><span class="n">' + String(i + 1).padStart(2, '0') + '</span><span>' + S.title + '</span></button>'; li.firstChild.addEventListener('click', () => go(i)); chap.appendChild(li); });
+  const chapBtns = $$('button', chap);
+
+  const ICON_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2v12L14 8z" fill="currentColor"/></svg>';
+  const ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/></svg>';
+  const ICON_REPLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.5-3.6M3 2.5v2.5h2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function beatAt(S, t) { let txt = S.beats[0][1]; for (const [bt, b] of S.beats) { if (t >= bt) txt = b; } return txt; }
+  function setCaption(txt) { if (txt === lastCap) return; lastCap = txt; cap.textContent = txt; if (!RM && cap.animate) cap.animate([{ opacity: .2, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 350, easing: 'ease-out' }); }
+  function setProgress(t) { segs.forEach((s, j) => { s.firstChild.style.width = (j < cur.i ? 100 : j > cur.i ? 0 : clamp(t / cur.S.dur) * 100) + '%'; }); count.textContent = (cur.i + 1) + ' / ' + total; }
+  function updateUI() {
+    playBtn.querySelector('#playicon').innerHTML = playing ? ICON_PAUSE : ended ? ICON_REPLAY : ICON_PLAY;
+    playBtn.querySelector('#playlabel').textContent = playing ? 'Pause' : ended ? 'Replay' : 'Play';
+    playBtn.setAttribute('aria-label', playing ? 'Pause the story' : ended ? 'Replay the story' : 'Play the story');
+    bigPlay.hidden = playing || (cur && cur.i > 0 && !ended);
+    chapBtns.forEach((b, j) => b.setAttribute('aria-current', j === cur.i ? 'true' : 'false'));
+  }
+  function show(i) {
+    if (cur) { cur.anims.forEach(a => { try { a.cancel(); } catch (e) {} }); cur.el.hidden = true; }
+    const S = SCENES[i];
+    let el = sceneEls[i];
+    if (!el) { el = document.createElement('div'); el.className = 'scene'; el.innerHTML = S.html(); canvas.appendChild(el); sceneEls[i] = el; if (RM) $$('svg', el).forEach(s => { try { s.pauseAnimations(); } catch (e) {} }); }
+    el.hidden = false;
+    cur = { i, el, S, anims: [] };
+    if (S.enter) S.enter(el);
+    elapsed = 0;
+    if (playing && !RM) { t0 = performance.now(); if (S.update) S.update(el, 0); setCaption(beatAt(S, 0)); setProgress(0); }
+    else {
+      cur.anims.forEach(a => { try { a.finish(); } catch (e) {} });
+      if (S.update) S.update(el, S.dur);
+      if (playing) { t0 = performance.now(); setCaption(beatAt(S, 0)); setProgress(0); }
+      else { setCaption(S.beats[0][1]); setProgress(0); cur.rest = true; }
+    }
+    updateUI();
+  }
+  function tick(now) {
+    if (!playing) return;
+    const t = elapsed + (now - t0), S = cur.S;
+    if (S.update && !RM) S.update(cur.el, Math.min(t, S.dur));
+    setCaption(beatAt(S, t)); setProgress(t);
+    if (t >= S.dur) {
+      if (cur.i < total - 1) { show(cur.i + 1); raf = requestAnimationFrame(tick); }
+      else finish();
+      return;
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function play() {
+    if (playing) return;
+    if (ended) { ended = false; playing = true; show(0); t0 = performance.now(); raf = requestAnimationFrame(tick); updateUI(); return; }
+    playing = true;
+    if (cur.rest) { cur.rest = false; elapsed = 0; if (!RM) { cur.anims.forEach(a => { try { a.currentTime = 0; a.play(); } catch (e) {} }); if (cur.S.update) cur.S.update(cur.el, 0); } }
+    else if (!RM) cur.anims.forEach(a => { try { a.play(); } catch (e) {} });
+    t0 = performance.now(); raf = requestAnimationFrame(tick); updateUI();
+  }
+  function pause() { if (!playing) return; playing = false; elapsed += performance.now() - t0; cancelAnimationFrame(raf); cur.anims.forEach(a => { try { a.pause(); } catch (e) {} }); updateUI(); }
+  function finish() { playing = false; ended = true; cancelAnimationFrame(raf); setProgress(cur.S.dur); setCaption('That is the whole plan. Explore the details below, or press Replay.'); updateUI(); }
+  function go(i) { i = Math.max(0, Math.min(total - 1, i)); ended = false; cancelAnimationFrame(raf); show(i); if (playing) raf = requestAnimationFrame(tick); }
+  function toggle() { playing ? pause() : play(); }
+
+  playBtn.addEventListener('click', toggle);
+  bigPlay.addEventListener('click', () => { play(); });
+  $('#prev').addEventListener('click', () => go(cur.i - 1));
+  $('#next').addEventListener('click', () => go(cur.i + 1));
+  $('#player').addEventListener('keydown', e => {
+    if (e.target.closest('button,input')) { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { /* fall through */ } else return; }
+    if (e.key === ' ' || e.key === 'k') { e.preventDefault(); toggle(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur.i - 1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); go(cur.i + 1); }
+  });
+  stage.tabIndex = 0;
+  stage.setAttribute('aria-label', 'Animated scene. Space plays or pauses; arrow keys change scene.');
+  stage.addEventListener('click', e => { if (e.target.closest('.bigplay')) return; toggle(); });
+
+  function fit() { const s = stage.clientWidth / 1280; canvas.style.transform = 'scale(' + s + ')'; }
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(stage); else window.addEventListener('resize', fit);
+  show(0);
+
+  /* tool 1: phases */
+  const PHASES = [
+    { name: 'Phase 0: Prove', months: 'Months 1 to 3', usd: 'US$1.17M', php: '₱73M', team: '10 people', unit: 'Weeks', lo: 1, hi: 12, span: [0, 3], what: 'Check data and privacy, test candidate models, run two quick pilots and build the business case.', acts: [['Mobilise', 1, 2], ['Data audit', 1, 6], ['Privacy impact assessment', 1, 6], ['Golden test sets', 2, 6], ['Model bake-off', 2, 8], ['Quick-win pilots', 3, 10], ['MLOps set-up', 2, 10], ['Partner and data terms', 4, 10], ['Capacity and energy plan', 4, 10], ['Business case', 8, 12], ['Gate 1 pack', 11, 12]], ends: 'Gate 1, month 3: go or stop', gate: 0 },
+    { name: 'Phase 1: Build', months: 'Months 4 to 9', usd: 'US$4.58M', php: '₱286M', team: '16 people', unit: 'Months', lo: 4, hi: 9, span: [3, 9], what: 'Collect Filipino data, adapt the three models, make them safe, and pilot with staff and care agents.', acts: [['Sign data deals', 4, 5], ['Build the Filipino corpus', 4, 7], ['Write teaching examples', 4, 8], ['Build the gateway and router', 4, 8], ['Adapt the three models', 5, 8], ['Teach Globe’s tasks', 6, 8], ['Make them safe', 6, 9], ['Connect to care systems', 6, 9], ['Staff pilot, about 500 people', 7, 9], ['Care pilot', 7, 9], ['Business offer design', 7, 9], ['Pilot hosting on 8 GPUs', 8, 9], ['First model card', 9, 9], ['Gate 2 pack', 9, 9]], ends: 'Gate 2, month 9: ready for production?', gate: 1 },
+    { name: 'Phase 2a: Scale', months: 'Months 10 to 18', usd: 'US$5.09M', php: '₱318M', team: '16 people', unit: 'Months', lo: 10, hi: 18, span: [9, 18], what: 'Go live in customer care, launch sovereign AI for business, add voice and regional languages, and refresh the models.', acts: [['Go live in care', 10, 15], ['Scale hosting to 24 GPUs', 10, 12], ['Speech and regional data', 10, 16], ['Launch sovereign AI for business', 12, 18, '12 onward'], ['Voice and scam protection', 13, 18], ['First model refresh', 13, 16], ['ISO/IEC 42001 certification', 13, 18, '13 to 20'], ['Energy report', 15, 15], ['Gate 3 pack', 18, 18]], ends: 'Gate 3, month 18: revenue on target?', gate: 2 },
+    { name: 'Phase 2b: Grow', months: 'Months 19 to 24', usd: 'US$3.57M', php: '₱223M', team: '16 people', unit: 'Months', lo: 19, hi: 24, span: [18, 24], what: 'A second model refresh, more business clients, a back-up site and the plan for Year 3.', acts: [['Second model refresh', 19, 22], ['Client tuning', 19, 24], ['Disaster-recovery site', 19, 21], ['Distil into the Edge model', 20, 23], ['Year 3 plan', 22, 24], ['Annual disclosure', 24, 24]], ends: 'The Year 3 plan: running costs of about US$4.8M a year', gate: null }
+  ];
+  const GATES = [
+    { name: 'Gate 1', when: 'Month 3', rel: 'US$4.58M for Phase 1', items: ['The best candidate model meets the agreed target on Globe’s golden sets in Filipino and Taglish', 'The business case clears the payback hurdle, with a named owner for each value line', 'At least three clients outside the Ayala group have signed letters of intent', 'The privacy impact assessment approves the data sources', 'Renewable-backed capacity is confirmed at STT GDC Philippines', 'Legal has approved the base model’s licence'], ifnot: 'Stop at US$1.17M. Globe keeps the data audit, test sets and pilot results, and carries on with rented AI models.' },
+    { name: 'Gate 2', when: 'Month 9', rel: 'US$5.09M for Phase 2a', items: ['The Core model meets its golden-set targets in Filipino, Taglish and Cebuano', 'Safety tests pass, with no open critical issues from red teaming', 'The care pilot hits its targets for containment, handle time and satisfaction', 'Cost per answer and energy per 1,000 answers are within target', 'The model card is published and privacy controls have been audited'], ifnot: 'Fix and re-test within two months.' },
+    { name: 'Gate 3', when: 'Month 18', rel: 'US$3.57M for Phase 2b', items: ['Signed business revenue is on target, against the number set in Phase 0', 'Care savings are on target and customer satisfaction has held or improved', 'Energy per 1,000 answers is at or below target', 'A decision is taken on building from scratch, joining a national consortium, or continuing to adapt'], ifnot: 'The last tranche stays locked, except about US$0.11M a month to keep the service running.' }
+  ];
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const ptabs = $('#phase-tabs'), ppanel = $('#phase-panel');
+  PHASES.forEach((P, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab'); b.id = 'ptab' + i; b.textContent = P.name; b.addEventListener('click', () => renderPhase(i)); ptabs.appendChild(b); });
+  function renderPhase(i) {
+    const P = PHASES[i];
+    $$('.tab', ptabs).forEach((b, j) => { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
+    ppanel.setAttribute('aria-labelledby', 'ptab' + i);
+    const X = m => 10 + m * (600 / 24);
+    let mini = '<svg class="mini" viewBox="0 0 620 66" role="img" aria-label="' + esc(P.name) + ' on the 24-month timeline"><rect x="10" y="14" width="600" height="18" rx="9" fill="var(--line)"/><rect x="' + X(P.span[0]) + '" y="14" width="' + (X(P.span[1]) - X(P.span[0])) + '" height="18" rx="9" fill="var(--accent)"/>';
+    [0, 6, 12, 18, 24].forEach(m => { mini += '<text x="' + X(m) + '" y="60" font-size="20" text-anchor="middle" fill="var(--muted)" font-family="Nunito Sans, sans-serif">' + m + '</text>'; });
+    mini += '</svg>';
+    const rows = P.acts.map(([n, a, b, custom]) => { const range = P.hi - P.lo + 1, l = (a - P.lo) / range * 100, w = (b - a + 1) / range * 100; const when = custom ? P.unit + ' ' + custom : a === b ? P.unit.replace(/s$/, '') + ' ' + a : P.unit + ' ' + a + ' to ' + b; return '<li><span>' + esc(n) + '</span><span class="bar"><i style="left:' + l.toFixed(1) + '%;width:' + w.toFixed(1) + '%"></i></span><span class="when">' + when + '</span></li>'; }).join('');
+    const gate = P.gate === null ? '<p>' + esc(P.ends) + '</p>' : '<p><b>Ends with ' + esc(P.ends) + '</b></p><ul>' + GATES[P.gate].items.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+    ppanel.innerHTML = '<div class="ph-grid"><div><p class="ph-name">' + esc(P.name) + '</p>' + mini + '<dl class="kv"><dt>When</dt><dd>' + P.months + '</dd><dt>Budget</dt><dd>' + P.usd + ' (' + P.php + ')</dd><dt>Team</dt><dd>' + P.team + '</dd></dl><p class="what">' + esc(P.what) + '</p><div class="ends">' + gate + '</div></div><div><ul class="acts">' + rows + '</ul></div></div>';
+  }
+  ptabs.addEventListener('keydown', e => { const tabs = $$('.tab', ptabs), k = tabs.indexOf(document.activeElement); if (k < 0) return; if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const n = (k + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length; renderPhase(n); tabs[n].focus(); } });
+  renderPhase(0);
+
+  /* tool 2: payback */
+  const COST = [0, 7.4, 14.4, 19.2, 24.0, 28.8, 33.6];
+  const val = $('#val'), slow = $('#slow'), valout = $('#valout');
+  function payback() {
+    const php = +val.value, v = php / 62.5;
+    const V = [0, 0]; V[2] = slow.checked ? v / 2 : v; for (let k = 3; k <= 6; k++) V[k] = V[k - 1] + v;
+    let when = null;
+    for (let k = 1; k <= 6; k++) { const d1 = V[k] - COST[k]; if (d1 >= -1e-9) { const d0 = V[k - 1] - COST[k - 1]; const f = d0 >= 0 ? 0 : d0 / (d0 - d1); when = k - 1 + f; break; } }
+    valout.textContent = '₱' + php.toLocaleString('en-US') + 'M a year (about US$' + v.toFixed(1) + 'M)';
+    const res = $('#payresult'), big = $('#paybig'), txt = $('#paytext');
+    if (when === null) { res.classList.add('wait'); big.textContent = 'Not within 6 years'; txt.textContent = 'At this level of value, Luntian does not cover its cost within six years.'; }
+    else { res.classList.remove('wait'); const yrs = Math.round(when * 10) / 10, mon = Math.round(when * 12); big.textContent = 'About ' + yrs.toFixed(1) + ' years'; const yr = Math.ceil(when - 1e-6); txt.textContent = (Math.abs(when - Math.round(when)) < .03 ? 'Value catches up with cost at the end of Year ' + Math.round(when) + '.' : 'Value catches up with cost during Year ' + yr + ', around month ' + mon + '.'); }
+    const W = 640, H = 300, x = k => 56 + k * ((W - 80) / 6), maxY = Math.max(35, Math.ceil(Math.max(V[6], COST[6]) / 10) * 10), y = u => H - 40 - u / maxY * (H - 70);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Cumulative cost and value over six years">';
+    for (let u = 0; u <= maxY; u += 10) s += '<line x1="56" x2="' + (W - 24) + '" y1="' + y(u) + '" y2="' + y(u) + '" stroke="var(--line)"/><text x="48" y="' + (y(u) + 5) + '" text-anchor="end" font-size="15" fill="var(--muted)" font-family="Nunito Sans, sans-serif">' + u + '</text>';
+    for (let k = 0; k <= 6; k++) s += '<text x="' + x(k) + '" y="' + (H - 16) + '" text-anchor="middle" font-size="15" fill="var(--muted)" font-family="Nunito Sans, sans-serif">' + (k ? 'Y' + k : 'Start') + '</text>';
+    s += '<text x="56" y="16" font-size="15" fill="var(--muted)" font-family="Nunito Sans, sans-serif">US$M, added up from approval</text>';
+    s += '<polyline fill="none" stroke="var(--muted)" stroke-width="3" stroke-linejoin="round" points="' + COST.map((u, k) => x(k) + ',' + y(u)).join(' ') + '"/>';
+    s += '<polyline fill="none" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round" points="' + V.map((u, k) => x(k) + ',' + y(u)).join(' ') + '"/>';
+    s += '<text x="' + (x(6) - 4) + '" y="' + (y(COST[6]) - 8) + '" text-anchor="end" font-size="16" font-weight="700" fill="var(--muted)" font-family="Nunito Sans, sans-serif">Cost</text>';
+    s += '<text x="' + (x(6) - 4) + '" y="' + (y(V[6]) + (V[6] > COST[6] ? -8 : 18)) + '" text-anchor="end" font-size="16" font-weight="700" fill="var(--accent)" font-family="Nunito Sans, sans-serif">Value</text>';
+    if (when !== null) { const k = Math.floor(when), f = when - k, kk = Math.min(6, k + 1), cx = lerp(x(k), x(kk), f), cy = lerp(y(COST[k]), y(COST[kk]), f); s += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="none" stroke="var(--amber)" stroke-width="4"/>'; }
+    s += '</svg>';
+    $('#paychart').innerHTML = s;
+  }
+  val.addEventListener('input', payback); slow.addEventListener('change', payback);
+  payback();
+
+  /* tool 3: gates */
+  const gtabs = $('#gate-tabs'), glist = $('#gate-list'), verdict = $('#verdict');
+  let gi = 0;
+  GATES.forEach((G, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab'); b.textContent = G.name + ', ' + G.when.toLowerCase(); b.addEventListener('click', () => renderGate(i)); gtabs.appendChild(b); });
+  function renderGate(i) {
+    gi = i; const G = GATES[i];
+    $$('.tab', gtabs).forEach((b, j) => b.setAttribute('aria-selected', j === i ? 'true' : 'false'));
+    glist.innerHTML = G.items.map((it, j) => '<li><label class="check" for="g' + i + '_' + j + '"><input type="checkbox" id="g' + i + '_' + j + '"><span>' + esc(it) + '</span></label></li>').join('');
+    $$('input', glist).forEach(inp => inp.addEventListener('change', judge));
+    judge();
+  }
+  function judge() {
+    const G = GATES[gi], boxes = $$('input', glist), n = boxes.filter(b => b.checked).length;
+    const all = n === boxes.length;
+    verdict.classList.toggle('go', all);
+    verdict.innerHTML = all ? '<b>Go: release ' + G.rel + '.</b><p>Every condition is met, so leadership releases the next tranche.</p>' : '<b>Not yet: ' + n + ' of ' + boxes.length + ' conditions met.</b><p>If the gate is missed: ' + esc(G.ifnot) + '</p>';
+  }
+  renderGate(0);
+})();
+</script>
+
+</body>
+</html>
