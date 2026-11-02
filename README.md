@@ -4,7 +4,7 @@ A plain-language proposal for Globe Telecom to own an AI that speaks Filipino, T
 
 - Website: https://reekhilkhanna.github.io/project-luntian/
 - The proposal (PDF): [proposal.pdf](proposal.pdf)
-- The full report (PDF): [report.pdf](report.pdf)
+- The full playbook (PDF): [report.pdf](report.pdf)
 - The Luntian Story: [story.html](story.html)
 
-Prepared by Reekhil Khanna, AI consultant based in Singapore. This is an independent proposal for Globe Telecom. It is not an official Globe page.
+An independent proposal for Globe Telecom, revised November 2026. It starts with a 3-month test for US$1.17M and about US$4.8M in total to go live in customer care, and adds more only when it pays. It is not an official Globe page.

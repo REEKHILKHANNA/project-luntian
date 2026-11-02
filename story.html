@@ -60,6 +60,7 @@ h1{font:700 clamp(36px,5.4vw,60px)/1.04 var(--display);letter-spacing:-.02em;mar
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
 .tab{padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:600 15px var(--display);cursor:pointer}
 .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tab[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .ph-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:28px}
 @media (max-width:780px){.ph-grid,.pay-grid{grid-template-columns:minmax(0,1fr)!important}}
 .ph-name{font:700 clamp(24px,2.8vw,32px)/1.1 var(--display);margin:0}
@@ -155,6 +156,9 @@ footer p{margin:0 0 6px;max-width:90ch}
 .cv .n-b span{color:var(--stage-muted)}
 .cv .node.lit{border-color:#F2B544;box-shadow:0 0 0 6px rgba(242,181,68,.25),0 0 40px rgba(242,181,68,.35)}
 .cv .node.soft{border-color:rgba(242,181,68,.7)}
+.cv .node.later{background:transparent;border:2px dashed #3C6B5A;color:var(--stage-ink)}
+.cv .node.later span{color:var(--stage-muted)}
+.cv .node.later.soft{border-color:rgba(242,181,68,.85)}
 .cv .qb{background:#F3F1E8;color:#13241C;border-radius:24px 24px 24px 6px;padding:16px 24px;display:flex;flex-direction:column;justify-content:center;gap:6px}
 .cv .qb .tag{font:700 15px var(--display);letter-spacing:.12em;text-transform:uppercase;color:#17754C}
 .cv .qb .qt{font:600 26px/1.3 var(--body);margin:0}
@@ -248,11 +252,7 @@ footer p{margin:0 0 6px;max-width:90ch}
     <p class="eyebrow">Project Luntian</p>
     <h1>The Luntian Story</h1>
     <p class="lede">How Globe Telecom can build its own green AI that speaks Filipino, Taglish and Cebuano. Press play for a three-minute animated walkthrough, then explore the plan yourself below.</p>
-    <p class="byline">Prepared by Reekhil Khanna, AI consultant based in Singapore</p>
-    <nav class="links" aria-label="Contact">
-      <a href="mailto:reekhilkhanna@gmail.com">reekhilkhanna@gmail.com</a>
-      <a href="https://www.linkedin.com/in/reekhil-khanna-51603a67" target="_blank" rel="noopener">LinkedIn</a>
-    </nav>
+    <p class="byline">An independent proposal for Globe Telecom, November 2026</p>
   </header>
 
   <section class="player" id="player" aria-label="Animated story">
@@ -274,28 +274,23 @@ footer p{margin:0 0 6px;max-width:90ch}
   <section class="explore" aria-labelledby="explore-title">
     <p class="eyebrow">Explore the plan</p>
     <h2 id="explore-title">Try it yourself</h2>
-    <p>Click through each phase, test the payback with your own numbers, and see how a gate decides whether money is released.</p>
+    <p>Click through each step, see when the money comes back for each use, and see how a gate decides whether money is released.</p>
 
     <div class="tool" id="phase-tool">
-      <h3>What happens in each phase</h3>
-      <p class="hint">Pick a phase to see its months, budget, team, activities and the gate at the end.</p>
-      <div class="tabs" role="tablist" aria-label="Phases" id="phase-tabs"></div>
+      <h3>What happens in each step</h3>
+      <p class="hint">Pick a step to see its months, budget, team, activities and the check at the end.</p>
+      <div class="tabs" role="tablist" aria-label="Steps" id="phase-tabs"></div>
       <div id="phase-panel" role="tabpanel"></div>
     </div>
 
     <div class="tool" id="pay-tool">
       <h3>When does it pay back?</h3>
-      <p class="hint">Move the slider to change how much value Luntian brings each year from Year 2.</p>
+      <p class="hint">Pick what Luntian is used for to see when the value it brings catches up with what Globe has spent.</p>
       <div class="pay-grid">
         <div>
-          <div class="field">
-            <label for="val">Value each year from Year 2</label>
-            <output id="valout" for="val">₱600M</output>
-            <input type="range" id="val" min="300" max="1000" step="25" value="600">
-          </div>
-          <label class="check" for="slow"><input type="checkbox" id="slow"><span>Year 2 starts slowly and brings only half the value</span></label>
-          <div class="result" id="payresult" style="margin-top:18px"><p class="big" id="paybig"></p><p id="paytext"></p></div>
-          <p class="note">Cost is the US$14.4M plan plus about US$4.8M a year to run from Year 3. ₱62.5 per US$. The plan's base case is ₱600M a year; Globe reports ₱1.2B of AI value to date.</p>
+          <div class="tabs" role="group" aria-label="What Luntian is used for" id="use-tabs"></div>
+          <div class="result" id="payresult"><p class="big" id="paybig"></p><p id="paytext"></p></div>
+          <p class="note">Cost is the three steps to go live, US$4.79M, then about US$2.74M a year to run. The two business cases also pay for the business set-up (US$0.40M), a standby site with ISO/IEC 42001 (US$0.28M) and a second server from month 19 (US$0.44M a year). Value starts at month 13 and builds up over six months; business clients join over the year from month 19. ₱62.5 per US$. The values are planning assumptions that Step 1 checks against Globe's own numbers.</p>
         </div>
         <div class="chart" id="paychart"></div>
       </div>
@@ -303,7 +298,7 @@ footer p{margin:0 0 6px;max-width:90ch}
 
     <div class="tool" id="gate-tool">
       <h3>How a gate decides</h3>
-      <p class="hint">Tick the conditions that are met. Money for the next phase is released only when every one is true.</p>
+      <p class="hint">Tick the conditions that are met. Money for the next step is released only when every one is true.</p>
       <div class="tabs" role="tablist" aria-label="Gates" id="gate-tabs"></div>
       <ul class="gate-list" id="gate-list"></ul>
       <div class="verdict" id="verdict" aria-live="polite"></div>
@@ -311,8 +306,8 @@ footer p{margin:0 0 6px;max-width:90ch}
   </section>
 
   <footer>
-    <p>Figures come from the Project Luntian playbook and written proposal, with research as of 7 October 2026. Costs are upper-side estimates at ₱62.5 per US$. Value figures are illustrative until Phase 0 tests them with Globe's own numbers.</p>
-    <p>Sources include FilBench (2025), the Sahabat-AI, SEA-LION v3 and Llama 3.1 model cards, ML.ENERGY and AI Energy Score, TelecomTV (September 2026), STT GDC, ACEN and the National Privacy Commission. The written proposal lists every source and is available on request.</p>
+    <p>Figures come from the Project Luntian proposal, revised November 2026, with research as of October 2026. Costs are upper-side estimates at ₱62.5 per US$, with a 15% safety margin. Value figures are planning assumptions until Step 1 checks them against Globe's own numbers.</p>
+    <p>Sources include FilBench (2025), the Sahabat-AI, SEA-LION v3 and Llama 3.1 model cards, ML.ENERGY and AI Energy Score, TelecomTV (September 2026), STT GDC, ACEN and the National Privacy Commission. The proposal and the playbook list every source.</p>
   </footer>
 </div>
 
@@ -365,9 +360,9 @@ footer p{margin:0 0 6px;max-width:90ch}
 
   /* router geometry */
   const RQ = [
-    { q: "Scam ba 'tong text na 'to?", tag: 'Taglish', r: 'Mukhang scam ito. Huwag i-click ang link.', y: 220 },
     { q: 'Paano mag-upgrade ng plan ko?', tag: 'Taglish', r: "Sige po! Ito ang mga plan na puwede sa 'yo.", y: 365 },
-    { q: 'Summarise this 40-page contract', tag: 'English', r: 'Here are the key terms on one page.', y: 510 }
+    { q: "Scam ba 'tong text na 'to?", tag: 'Taglish', r: 'Mukhang scam ito. Huwag i-click ang link.', y: 365 },
+    { q: 'Summarise this 40-page contract', tag: 'English, for staff', r: 'Here are the key terms on one page.', y: 365 }
   ];
   const ROUTES = RQ.map(R => {
     const pts = [[184, 365], [304, 365], [380, 365], [600, 365], [650, 365], [650, R.y], [700, R.y], [1000, R.y], [1040, R.y], [1040, 365], [1080, 365], [1155, 365]];
@@ -387,7 +382,7 @@ footer p{margin:0 0 6px;max-width:90ch}
     return R.pts[R.pts.length - 1];
   }
 
-  const STATS = [[2.8, v => v.toFixed(1) + 'x'], [50, v => Math.round(v) + '%'], [67.7, v => v.toFixed(1) + 'M'], [3000, v => (v >= 2999.5 ? '3,000+' : (Math.round(v / 10) * 10).toLocaleString('en-US'))]];
+  const STATS = [[2.8, v => v.toFixed(1) + 'x'], [15, v => Math.round(v) + ' kW'], [67.7, v => v.toFixed(1) + 'M'], [3000, v => (v >= 2999.5 ? '3,000+' : (Math.round(v / 10) * 10).toLocaleString('en-US'))]];
   const STEPS = [
     ['Collect', 'Licensed news, books and broadcasts, public Filipino web text, and Globe data with a lawful basis'],
     ['Clean', 'Remove duplicates, spam, machine-translated and offensive text, and balance the languages'],
@@ -400,17 +395,33 @@ footer p{margin:0 0 6px;max-width:90ch}
   ];
   const SX = i => 110 + i * 151.43;
   const X8 = m => 96 + m * (1088 / 24);
-  const PH8 = ['Prove: test models, data and pilots, then Gate 1.', 'Build: teach the models Filipino, make them safe and pilot them.', 'Scale: go live in customer care and launch for business.', 'Grow: more business clients, a second refresh and a back-up site.'];
-  const ACT = [['Mobilise', 1, 2], ['Data audit', 1, 6], ['Privacy check', 1, 6], ['Golden test sets', 2, 6], ['Model bake-off', 2, 8], ['Quick-win pilots', 3, 10], ['MLOps set-up', 2, 10], ['Partner and data terms', 4, 10], ['Capacity and energy plan', 4, 10], ['Business case', 8, 12], ['Gate 1 pack', 11, 12]];
+  const PH8 = ['Test: compare models, check the data and run small trials, then Gate 1.', 'Build and try with staff: teach the model Filipino and let Globe staff use it, then Gate 2.', 'Go live: outside safety checks, then customers join care chat a few at a time.', 'Run and grow: about US$2.7M a year, and each add-on starts only when it pays.'];
+  const ACT = [['Set up the team', 1, 2], ['Data audit', 1, 6], ['Privacy check', 1, 6], ['Test questions', 2, 6], ['Compare models', 2, 8], ['Small trials', 3, 10], ['Tools set-up', 2, 10], ['Partner and data terms', 4, 10], ['Space at STT GDC', 4, 10], ['Business case', 8, 12], ['Gate 1 pack', 11, 12]];
   const WX = w => 380 + w * 67;
   const GX = [280, 640, 1000];
   const STAYS = [[900, 3900], [4800, 7800], [8700, 11700]];
   const GCARDS = [
-    ['Gate 1, month 3', ['Filipino test target met', '3 client letters signed', 'Privacy check approved'], 'Releases US$4.58M'],
-    ['Gate 2, month 9', ['Quality and safety met', 'Care pilot hits targets', 'Cost and energy on target'], 'Releases US$5.09M'],
-    ['Gate 3, month 18', ['Signed revenue on target', 'Care savings on target', 'Long-term path chosen'], 'Releases US$3.57M']
+    ['Gate 1, month 3', ['Tests beat today’s AI', 'Privacy check approved', 'Business case holds'], 'Releases US$2.27M'],
+    ['Gate 2, month 8', ['Staff trial on target', 'Quality and safety met', 'Cost per answer on target'], 'Releases US$1.35M'],
+    ['Go-live, month 12', ['Outside audit passed', 'Security test passed', 'Customers join slowly'], 'Live in care chat']
   ];
-  const SQUADS = [['Model', 'Research lead, 4 model engineers', 5, 220, '#5FD39A'], ['Data', '2 data engineers, 2 linguists', 4, 500, '#9CCDAE'], ['Platform', '2 MLOps, 1 GreenOps analyst', 3, 780, '#F2B544'], ['Trust', 'Safety lead, privacy lead', 2, 1060, '#CFE6D6']];
+  const SQUADS = [['Model', 'Research lead, 2 model engineers', 3, 220, '#5FD39A'], ['Data', 'Data engineer, 2 linguists', 3, 500, '#9CCDAE'], ['Platform', '2 platform engineers', 2, 780, '#F2B544'], ['Trust', 'Safety lead, privacy lead', 2, 1060, '#CFE6D6']];
+
+  /* the payback model, the same one the proposal uses (upper-side costs, US$M) */
+  const MODEL = { steps: [[1, 3, 1.174], [4, 8, 2.270], [9, 12, 1.346]], run: 2.74, care: 3.0, staff: 1.6, from: 13, ramp: 6, rev: 0.5, margin: 0.5, cFrom: 19, cRamp: 12, addons: [[13, 18, 0.40], [16, 21, 0.28]], server: 0.44, sFrom: 19, fx: 62.5 };
+  const USES = [{ label: 'Care and staff only', clients: 0 }, { label: 'Plus 10 business clients', clients: 10 }, { label: 'Plus 20 business clients', clients: 20 }];
+  function curve(clients) {
+    const M = MODEL, rampf = (m, f, n) => (m < f ? 0 : Math.min((m - f + 1) / n, 1));
+    const base = m => { for (const [a, b, u] of M.steps) { if (m >= a && m <= b) return u / (b - a + 1); } return M.run / 12; };
+    const extra = m => (clients ? M.addons.reduce((t, [a, b, u]) => t + (m >= a && m <= b ? u / (b - a + 1) : 0), 0) + (m >= M.sFrom ? M.server / 12 : 0) : 0);
+    const gross = m => (M.care + M.staff) / 12 * rampf(m, M.from, M.ramp) + clients * M.rev * M.margin / 12 * rampf(m, M.cFrom, M.cRamp);
+    const pts = []; let c = 0, v = 0, e = 0;
+    for (let m = 0; m <= 60; m++) { if (m > 0) { const x = extra(m); c += base(m); v += gross(m) - x; e += x; } pts.push({ m, c, v, e }); }
+    const hit = pts.find(q => q.m > 12 && q.v >= q.c);
+    let be = null;
+    if (hit) { const p = pts[hit.m - 1], d0 = p.v - p.c, d1 = hit.v - hit.c, t = p.m - d0 / (d1 - d0); be = { m: hit.m, t, c: p.c + (hit.c - p.c) * (t - p.m), spent: hit.c + hit.e }; }
+    return { pts, be, php: Math.round((M.care + M.staff + clients * M.rev * M.margin) * M.fx) };
+  }
 
   const SCENES = [
     { title: 'Meet Luntian', dur: 9000,
@@ -424,15 +435,15 @@ footer p{margin:0 0 6px;max-width:90ch}
       enter: r => { A($('.phone', r), [{ opacity: 0, transform: 'translateX(-60px)' }, { opacity: 1, transform: 'none' }], { duration: 900 }); pop($('.bub', r), 800); fadeIn($('.typing', r), 1600); fadeUp($('.q1', r), 2800); fadeIn($('.meter', r), 3000); growX($('.fill', r), 3200, 1800); fadeUp($('.mval', r), 4600); fadeUp($('.c2', r), 6500); fadeUp($('.c3', r), 9000); }
     },
     { title: 'Globe’s head start', dur: 10000,
-      beats: [[0, 'Globe is not starting from zero.'], [1500, 'Its AI already returns 2.8 times its cost: about ₱1.2B of value so far.'], [4500, 'Globe owns half of STT GDC Philippines, a data centre on renewable supply.'], [7000, 'And it serves 67.7 million mobile customers.']],
-      html: () => lab(3, 'Globe’s head start') + sh('Globe already has the hard parts') + [['return on Globe’s AI so far, about ₱1.2B of value', 96, 172], ['owner of STT GDC Philippines, which runs on renewable supply', 656, 172], ['mobile customers who could talk to Luntian', 96, 404], ['Globe sites moving to renewable power with ACEN by 2028', 656, 404]].map(([l, x, y], i) => '<div class="ab card stat s' + i + '" style="left:' + x + 'px;top:' + y + 'px;width:528px;height:206px"><p class="big">0</p><p class="lbl">' + l + '</p></div>').join(''),
+      beats: [[0, 'Globe is not starting from zero.'], [1500, 'Its AI already returns 2.8 times its cost: about ₱1.2B of value so far.'], [4500, 'Globe co-owns STT GDC Philippines, a data centre company on renewable supply, so Luntian needs no new building.'], [7000, 'And it serves 67.7 million mobile customers.']],
+      html: () => lab(3, 'Globe’s head start') + sh('Globe already has the hard parts') + [['return on Globe’s AI so far, about ₱1.2B of value', 96, 172], ['of space to start, in a data centre Globe co-owns', 656, 172], ['mobile customers who could talk to Luntian', 96, 404], ['Globe sites moving to renewable power with ACEN by 2028', 656, 404]].map(([l, x, y], i) => '<div class="ab card stat s' + i + '" style="left:' + x + 'px;top:' + y + 'px;width:528px;height:206px"><p class="big">0</p><p class="lbl">' + l + '</p></div>').join(''),
       enter: r => { fadeUp($('.sh', r), 0); $$('.stat', r).forEach((e, i) => pop(e, 200 + i * 700)); },
       update: (r, t) => { const els = r._c || (r._c = $$('.big', r)); els.forEach((e, i) => { const p = ease(clamp((t - (300 + i * 700)) / 1300)); const s = STATS[i][1](STATS[i][0] * p); if (e.textContent !== s) e.textContent = s; }); }
     },
     { title: 'Adapt, don’t build', dur: 12500,
-      beats: [[0, 'There are two ways for Globe to get its own AI.'], [1200, 'Building from scratch takes about 24 months and about US$33M.'], [4200, 'Adapting proven open models goes live in 12 months, for about US$14.4M.'], [9000, 'It is like hiring a bright graduate and training them, instead of raising someone from birth.']],
+      beats: [[0, 'There are two ways for Globe to get its own AI.'], [1200, 'Building from scratch takes about 24 months and about US$33M.'], [4200, 'Adapting proven open models goes live in 12 months, for about US$4.8M, starting with a US$1.17M test.'], [9000, 'It is like hiring a bright graduate and training them, instead of raising someone from birth.']],
       html: () => { const px = 860 / 24; let ticks = ''; [0, 6, 12, 18, 24].forEach(m => { ticks += '<p class="ab tick" style="left:' + (330 + m * px - 30) + 'px;top:394px;width:60px">' + m + '</p>'; });
-        return lab(4, 'Two ways to build') + sh('Adapt, don’t build from zero') + '<div class="ab lane-l" style="left:64px;top:190px;width:250px"><b>Build from scratch</b><span>about US$33M</span></div><div class="ab track" style="left:330px;top:200px;width:860px;height:44px"><div class="tfill build fill-b"></div><div class="runner run-b"></div></div><p class="ab flag fb" style="left:978px;top:146px;white-space:nowrap">Live at month 24</p><div class="ab lane-l" style="left:64px;top:300px;width:250px"><b>Adapt open models</b><span>about US$14.4M</span></div><div class="ab track" style="left:330px;top:310px;width:860px;height:44px"><div class="tfill adapt fill-a"></div><div class="tfill live fill-l"></div><div class="runner run-a"></div></div><p class="ab flag fa" style="left:' + (330 + 12 * px - 106) + 'px;top:256px;white-space:nowrap">Live at month 12</p><div class="ab axis" style="left:330px;top:384px;width:860px"></div>' + ticks + '<p class="ab tick" style="left:330px;top:428px;width:860px">Months from approval</p><div class="ab card an" style="left:64px;top:500px;width:1152px;height:130px"><div class="row"><div class="ic">' + ICON.leaf + '</div><div><b>Building from scratch is like raising a new employee from birth.</b><span>Adapting is like hiring a bright graduate and training them at Globe.</span></div></div></div>'; },
+        return lab(4, 'Two ways to build') + sh('Adapt, don’t build from zero') + '<div class="ab lane-l" style="left:64px;top:190px;width:250px"><b>Build from scratch</b><span>about US$33M</span></div><div class="ab track" style="left:330px;top:200px;width:860px;height:44px"><div class="tfill build fill-b"></div><div class="runner run-b"></div></div><p class="ab flag fb" style="left:978px;top:146px;white-space:nowrap">Live at month 24</p><div class="ab lane-l" style="left:64px;top:300px;width:250px"><b>Adapt open models</b><span>about US$4.8M to go live</span></div><div class="ab track" style="left:330px;top:310px;width:860px;height:44px"><div class="tfill adapt fill-a"></div><div class="tfill live fill-l"></div><div class="runner run-a"></div></div><p class="ab flag fa" style="left:' + (330 + 12 * px - 106) + 'px;top:256px;white-space:nowrap">Live at month 12</p><div class="ab axis" style="left:330px;top:384px;width:860px"></div>' + ticks + '<p class="ab tick" style="left:330px;top:428px;width:860px">Months from approval</p><div class="ab card an" style="left:64px;top:500px;width:1152px;height:130px"><div class="row"><div class="ic">' + ICON.leaf + '</div><div><b>Building from scratch is like raising a new employee from birth.</b><span>Adapting is like hiring a bright graduate and training them at Globe.</span></div></div></div>'; },
       enter: r => { fadeUp($('.sh', r), 0); $$('.lane-l', r).forEach((e, i) => fadeUp(e, 200 + i * 200)); $$('.track', r).forEach((e, i) => fadeIn(e, 300 + i * 200)); fadeUp($('.an', r), 9000); },
       update: (r, t) => { const c = r._c || (r._c = { fb: $('.fill-b', r), rb: $('.run-b', r), fa: $('.fill-a', r), fl: $('.fill-l', r), ra: $('.run-a', r), flb: $('.fb', r), fla: $('.fa', r) });
         const px = 860 / 24, m = 24 * clamp((t - 1200) / 6600), w = m * px;
@@ -441,8 +452,8 @@ footer p{margin:0 0 6px;max-width:90ch}
         c.flb.classList.toggle('on', m >= 23.95); c.fla.classList.toggle('on', m >= 12); }
     },
     { title: 'How it works', dur: 14000,
-      beats: [[0, 'Every question first goes to a router.'], [900, 'A quick check, like spotting a scam text, goes to the small Edge model.'], [4000, 'An everyday question in Taglish goes to the Core model.'], [8000, 'A long or hard task goes to the Expert model.'], [12000, 'Small models answer most questions, which saves money and energy.']],
-      html: () => lab(5, 'How it works') + sh('The right model for each question', 800) + '<svg class="ab wires" style="left:0;top:0" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"><defs><filter id="bl" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="6"/></filter></defs><g stroke="#3C6B5A" stroke-width="3" fill="none" stroke-linecap="round"><path d="M304 365H380"/><path d="M600 365H700"/><path d="M650 220V510"/><path d="M650 220H700"/><path d="M650 510H700"/><path d="M1000 220H1040"/><path d="M1000 510H1040"/><path d="M1040 220V510"/><path d="M1000 365H1080"/><path d="M490 410V618H700" stroke-dasharray="8 8"/></g><circle class="dotglow" r="20" fill="#F2B544" filter="url(#bl)" style="opacity:0"/><circle class="dot" r="10" fill="#F2B544" style="opacity:0"/></svg><div class="ab qb" style="left:64px;top:150px;width:470px;height:120px"><span class="tag">Taglish</span><p class="qt">' + RQ[1].q + '</p></div><div class="ab reply" style="left:900px;top:84px;width:330px">' + RQ[0].r + '</div><div class="ab node n-q" style="left:64px;top:320px;width:240px;height:90px"><b>A question</b></div><div class="ab node n-r" style="left:380px;top:320px;width:220px;height:90px"><b>Router</b><span>picks the size</span></div><div class="ab node n-m" style="left:700px;top:170px;width:300px;height:100px"><b>Edge</b><span>Small, on phones and the network</span></div><div class="ab node n-m" style="left:700px;top:315px;width:300px;height:100px"><b>Core</b><span>Everyday care and business chats</span></div><div class="ab node n-m" style="left:700px;top:460px;width:300px;height:100px"><b>Expert</b><span>Long documents and hard cases</span></div><div class="ab node n-a" style="left:1080px;top:315px;width:150px;height:100px"><b>Answer</b></div><div class="ab node n-b" style="left:700px;top:590px;width:530px;height:56px"><span>Backup: outside AI, never with personal data</span></div>',
+      beats: [[0, 'Every question first goes through one gateway, which hides personal details.'], [900, 'At the start, one Globe model, the Core model, answers everyday questions in Taglish.'], [4000, 'It can also tell a customer when a text looks like a scam.'], [8000, 'Globe staff use the same model for sensitive work, so it stays inside Globe.'], [12000, 'A small fast model and a large one come later, only if they pay. An outside AI is a rare backup that never sees personal data.']],
+      html: () => lab(5, 'How it works') + sh('One Globe model to start', 800) + '<svg class="ab wires" style="left:0;top:0" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"><defs><filter id="bl" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="6"/></filter></defs><g stroke="#3C6B5A" stroke-width="3" fill="none" stroke-linecap="round"><path d="M304 365H380"/><path d="M600 365H700"/><path d="M1000 365H1080"/></g><g stroke="#3C6B5A" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 8"><path d="M650 220V510"/><path d="M650 220H700"/><path d="M650 510H700"/><path d="M1000 220H1040"/><path d="M1000 510H1040"/><path d="M1040 220V510"/><path d="M490 410V618H700"/></g><circle class="dotglow" r="20" fill="#F2B544" filter="url(#bl)" style="opacity:0"/><circle class="dot" r="10" fill="#F2B544" style="opacity:0"/></svg><div class="ab qb" style="left:64px;top:150px;width:470px;height:120px"><span class="tag">' + RQ[0].tag + '</span><p class="qt">' + RQ[0].q + '</p></div><div class="ab reply" style="left:900px;top:84px;width:330px">' + RQ[0].r + '</div><div class="ab node n-q" style="left:64px;top:320px;width:240px;height:90px"><b>A question</b></div><div class="ab node n-r" style="left:380px;top:320px;width:220px;height:90px"><b>Gateway</b><span>hides personal data</span></div><div class="ab node n-m later" style="left:700px;top:170px;width:300px;height:100px"><b>Small model</b><span>Later, only if it pays</span></div><div class="ab node n-m" style="left:700px;top:315px;width:300px;height:100px"><b>Core model</b><span>From day one</span></div><div class="ab node n-m later" style="left:700px;top:460px;width:300px;height:100px"><b>Large model</b><span>Later, only if it pays</span></div><div class="ab node n-a" style="left:1080px;top:315px;width:150px;height:100px"><b>Answer</b></div><div class="ab node n-b" style="left:700px;top:590px;width:530px;height:56px"><span>Rare backup: an outside AI, never with personal data</span></div>',
       enter: r => { fadeUp($('.sh', r), 0); fadeIn($('.wires', r), 100); $$('.node', r).forEach((e, i) => fadeUp(e, 150 + i * 90, 16)); fadeUp($('.qb', r), 250); },
       update: (r, t) => { const c = r._c || (r._c = { dot: $('.dot', r), glow: $('.dotglow', r), qt: $('.qt', r), tag: $('.tag', r), reply: $('.reply', r), router: $('.n-r', r), ans: $('.n-a', r), models: $$('.n-m', r) });
         if (t < 12000) {
@@ -452,13 +463,13 @@ footer p{margin:0 0 6px;max-width:90ch}
           c.dot.setAttribute('cx', xy[0]); c.dot.setAttribute('cy', xy[1]); c.glow.setAttribute('cx', xy[0]); c.glow.setAttribute('cy', xy[1]);
           c.dot.style.opacity = vis ? 1 : 0; c.glow.style.opacity = vis ? .45 : 0;
           c.router.classList.toggle('lit', vis && e >= P.fr0 - .02 && e <= P.fr1 + .06);
-          c.models.forEach((m, i) => { m.classList.remove('soft'); m.classList.toggle('lit', i === k && e >= P.fm - .01); });
+          c.models.forEach((m, i) => { m.classList.remove('soft'); m.classList.toggle('lit', i === 1 && e >= P.fm - .01); });
           c.ans.classList.toggle('lit', lt >= 2400);
           c.reply.classList.toggle('on', lt >= 2400 && lt < 3900);
         } else {
           c.dot.style.opacity = 0; c.glow.style.opacity = 0; c.router.classList.remove('lit'); c.ans.classList.remove('lit'); c.reply.classList.remove('on');
-          c.models.forEach(m => { m.classList.remove('lit'); m.classList.add('soft'); });
-          if (c.qt.textContent !== RQ[1].q) { c.qt.textContent = RQ[1].q; c.tag.textContent = RQ[1].tag; }
+          c.models.forEach((m, i) => { m.classList.remove('lit'); m.classList.toggle('soft', i !== 1); });
+          if (c.qt.textContent !== RQ[0].q) { c.qt.textContent = RQ[0].q; c.tag.textContent = RQ[0].tag; }
         } }
     },
     { title: 'Teaching Filipino', dur: 12500,
@@ -480,24 +491,24 @@ footer p{margin:0 0 6px;max-width:90ch}
       enter: r => { fadeUp($('.sh', r), 0); fadeIn($('.l1', r), 300); growX($('.b1x', r), 600, 2400); fadeIn($('.v1', r), 3000); fadeIn($('.l2', r), 3300); pop($('.b2x', r), 3600); fadeIn($('.v2', r), 3900); pop($('.badge', r), 4600, 700); fadeUp($('.k1', r), 6500); fadeUp($('.k2', r), 7100); fadeUp($('.k3', r), 7700); }
     },
     { title: 'The roadmap', dur: 13500,
-      beats: [[0, 'The plan runs for 24 months, in four phases.'], [1000, 'Phase 0, Prove: three months to test models, data and pilots.'], [2250, 'Gate 1 at month 3. Phase 1, Build: teach the models Filipino and make them safe.'], [4750, 'Gate 2 at month 9. Phase 2a, Scale: go live and launch for business.'], [6000, 'Month 12: Luntian is live in customer care.'], [8500, 'Gate 3 at month 18. Phase 2b, Grow: more clients and a second refresh.'], [11000, 'Leadership releases the money for each phase only at its gate.']],
-      html: () => { const B = [[0, 3, 'Prove', 'US$1.17M'], [3, 9, 'Build', 'US$4.58M'], [9, 18, 'Scale', 'US$5.09M'], [18, 24, 'Grow', 'US$3.57M']]; let s = '';
+      beats: [[0, 'Luntian goes live in 12 months, in three steps.'], [1000, 'Step 1, Test: three months to compare models, check the data and run small trials.'], [2250, 'Gate 1 at month 3. Step 2: teach the best model Filipino and try it with Globe staff.'], [4350, 'Gate 2 at month 8. Step 3: outside safety checks, then care chat opens to customers.'], [6000, 'Month 12: Luntian is live in customer care.'], [7500, 'After that it costs about US$2.7M a year to run, and it grows only when each new part pays.'], [11000, 'Leadership releases the money for each step only at its gate.']],
+      html: () => { const B = [[0, 3, 'Test', 'US$1.17M'], [3, 8, 'Build and try', 'US$2.27M'], [8, 12, 'Go live', 'US$1.35M'], [12, 24, 'Run and grow', 'US$2.74M a year']]; let s = '';
         B.forEach(([a, b, n, u], i) => { const l = X8(a) + (i ? 2 : 0), rr = X8(b) - (i < 3 ? 2 : 0); s += '<div class="ab band b' + i + '" style="left:' + l + 'px;top:300px;width:' + (rr - l) + 'px;height:120px"><b>' + n + '</b><span>' + u + '</span></div>'; });
-        [3, 9, 18].forEach((g, i) => { s += '<div class="ab dia" style="left:' + (X8(g) - 14) + 'px;top:456px"></div><p class="ab glab" style="left:' + (X8(g) - 60) + 'px;top:492px;width:120px">Gate ' + (i + 1) + '</p>'; });
-        return lab(8, 'The roadmap') + sh('The 24-month roadmap') + '<p class="ab pill hide" style="left:' + (X8(12) - 140) + 'px;top:226px;width:280px">Month 12: live in care</p><div class="ab stem hide" style="left:' + (X8(12) - 1.5) + 'px;top:270px;height:30px"></div>' + s + '<div class="ab axis" style="left:96px;top:469px;width:1088px"></div><p class="ab tick" style="left:66px;top:492px;width:60px">0</p><p class="ab tick" style="left:1154px;top:492px;width:60px">24</p><div class="ab mk" style="left:94px;top:290px;height:180px"></div><div class="ab mkdot" style="left:88px;top:462px"></div><p class="ab mklab" style="left:36px;top:524px;width:120px">Month 0</p><p class="ab phtext" style="left:96px;top:590px;width:1088px">' + PH8[0] + '</p>'; },
+        [3, 8].forEach((g, i) => { s += '<div class="ab dia" style="left:' + (X8(g) - 14) + 'px;top:456px"></div><p class="ab glab" style="left:' + (X8(g) - 60) + 'px;top:492px;width:120px">Gate ' + (i + 1) + '</p>'; });
+        return lab(8, 'The roadmap') + sh('Live in 12 months, then grow') + '<p class="ab pill hide" style="left:' + (X8(12) - 140) + 'px;top:226px;width:280px">Month 12: live in care</p><div class="ab stem hide" style="left:' + (X8(12) - 1.5) + 'px;top:270px;height:30px"></div>' + s + '<div class="ab axis" style="left:96px;top:469px;width:1088px"></div><p class="ab tick" style="left:66px;top:492px;width:60px">0</p><p class="ab tick" style="left:1154px;top:492px;width:60px">24</p><div class="ab mk" style="left:94px;top:290px;height:180px"></div><div class="ab mkdot" style="left:88px;top:462px"></div><p class="ab mklab" style="left:36px;top:524px;width:120px">Month 0</p><p class="ab phtext" style="left:96px;top:590px;width:1088px">' + PH8[0] + '</p>'; },
       enter: r => { fadeUp($('.sh', r), 0); $$('.band', r).forEach((e, i) => growX(e, 200 + i * 220, 700)); fadeIn($('.axis', r), 100); $$('.dia', r).forEach((e, i) => fadeIn(e, 600 + i * 150)); },
       update: (r, t) => { const c = r._c || (r._c = { bands: $$('.band', r), gates: $$('.dia', r), mk: $('.mk', r), md: $('.mkdot', r), ml: $('.mklab', r), pill: $('.pill', r), stem: $('.stem', r), tx: $('.phtext', r) });
         const m = 24 * clamp((t - 1000) / 10000), x = X8(m);
         c.mk.style.left = (x - 1.5) + 'px'; c.md.style.left = (x - 8) + 'px'; c.ml.style.left = (x - 60) + 'px';
         const lbl = 'Month ' + Math.floor(m + 1e-6); if (c.ml.textContent !== lbl) c.ml.textContent = lbl;
-        const pi = m < 3 ? 0 : m < 9 ? 1 : m < 18 ? 2 : 3;
+        const pi = m < 3 ? 0 : m < 8 ? 1 : m < 12 ? 2 : 3;
         c.bands.forEach((b, i) => b.classList.toggle('on', i === pi));
-        [3, 9, 18].forEach((g, i) => c.gates[i].classList.toggle('hit', m >= g));
+        [3, 8].forEach((g, i) => c.gates[i].classList.toggle('hit', m >= g));
         c.pill.classList.toggle('hide', m < 12); c.stem.classList.toggle('hide', m < 12);
         if (c.tx.textContent !== PH8[pi]) c.tx.textContent = PH8[pi]; }
     },
     { title: 'The first 90 days', dur: 12500,
-      beats: [[0, 'Phase 0 is the first money committed: US$1.17M for 90 days.'], [2500, 'Weeks 1 to 6: set up the team, audit the data, check privacy and write 1,000 test questions.'], [5800, 'Weeks 2 to 10: compare five or six models and run two quick pilots.'], [9000, 'Weeks 8 to 12: build the business case with three client letters, then Gate 1: go or stop.']],
+      beats: [[0, 'Step 1 is the first money committed: US$1.17M for 90 days.'], [2500, 'Weeks 1 to 6: set up the team, audit the data, check privacy and write 1,000 test questions.'], [5800, 'Weeks 2 to 10: compare five or six models and run small trials with care agents.'], [9000, 'Weeks 8 to 12: build the business case with Globe’s own numbers, then Gate 1: go or stop.']],
       html: () => { let s = '<p class="ab wk" style="left:300px;top:144px;width:70px;text-align:right">Week</p>';
         for (let w = 1; w <= 12; w++) s += '<p class="ab wk" style="left:' + (WX(w - 1)) + 'px;top:144px;width:67px">' + w + '</p>';
         ACT.forEach(([n, a, b], i) => { const y = 182 + i * 38; s += '<p class="ab rl" style="left:64px;top:' + y + 'px;width:300px">' + n + '</p><div class="ab rbar" style="left:' + (WX(a - 1) + 2) + 'px;top:' + y + 'px;width:' + ((b - a + 1) * 67 - 4) + 'px"><i></i></div>'; });
@@ -511,26 +522,28 @@ footer p{margin:0 0 6px;max-width:90ch}
         c.g1.classList.toggle('on', w >= 11.99); }
     },
     { title: 'What it costs', dur: 11000,
-      beats: [[0, 'The full plan costs about US$14.4M over two years, about ₱901M.'], [3800, 'It is paid in four parts, each released at a gate. Only Phase 0, US$1.17M, is committed first.'], [7000, 'People and data are the biggest costs. Training compute is only about 13%.']],
-      html: () => { const P = [['Phase 0', 'US$1.17M', '₱73M', 96, 183.6, '#2F8F60'], ['Phase 1: Build', 'US$4.58M', '₱286M', 186.6, 529.6, '#4E9E70'], ['Phase 2a: Scale', 'US$5.09M', '₱318M', 532.6, 913.7, '#7DBB93'], ['Phase 2b: Grow', 'US$3.57M', '₱223M', 916.7, 1184, '#A9D3B6']]; let s = '';
-        P.forEach(([n, u, p, a, b, col], i) => { const off = i ? 10 : 0; s += '<p class="ab slab sl' + i + '" style="left:' + a + 'px;top:208px;width:' + Math.max(150, b - a) + 'px">' + n + '</p><div class="ab sg sg' + i + '" style="left:' + a + 'px;top:240px;width:' + (b - a) + 'px;height:90px;background:' + col + ';border-radius:' + (i === 0 ? '12px 0 0 12px' : i === 3 ? '0 12px 12px 0' : '0') + '"></div><p class="ab samt sa' + i + '" style="left:' + (a + off) + 'px;top:342px;width:' + Math.max(100, b - a - off) + 'px">' + u + '</p><p class="ab speso sp' + i + '" style="left:' + (a + off) + 'px;top:370px;width:120px">' + p + '</p>'; });
-        return lab(10, 'What it costs') + sh('Paid in four parts') + '<p class="ab pill today" style="left:96px;top:148px;width:400px;padding:10px 14px;white-space:nowrap">Only this part is committed first</p>' + s + '<p class="ab counter" style="left:96px;top:430px;width:600px">US$0.0M</p><p class="ab small tot" style="left:96px;top:516px;width:700px">over two years, about ₱901M, with 15% contingency</p><div class="ab tags" style="left:96px;top:590px;width:1088px"><span class="tag3 t1">People 35%</span><span class="tag3 t2">Data 15%</span><span class="tag3 t3">Training compute 13%</span></div>'; },
-      enter: r => { fadeUp($('.sh', r), 0); [0, 1, 2, 3].forEach(i => { const d = 600 + i * 700; A($('.sg' + i, r), [{ opacity: 0, transform: 'translateY(-60px)' }, { opacity: 1, transform: 'none' }], { delay: d, duration: 600, easing: 'cubic-bezier(.3,1.4,.5,1)' }); fadeIn($('.sl' + i, r), d + 100); fadeIn($('.sa' + i, r), d + 200); fadeIn($('.sp' + i, r), d + 250); }); pop($('.today', r), 3800); fadeIn($('.counter', r), 400); fadeIn($('.tot', r), 3400); fadeUp($('.t1', r), 7000); fadeUp($('.t2', r), 7400); fadeUp($('.t3', r), 7800); },
-      update: (r, t) => { const e = r._c || (r._c = $('.counter', r)); const s = 'US$' + (14.41 * ease(clamp((t - 600) / 2800))).toFixed(1) + 'M'; if (e.textContent !== s) e.textContent = s; }
+      beats: [[0, 'Going live costs about US$4.8M, about ₱299M, in three parts.'], [3800, 'Each part is released at a gate. Only Step 1, US$1.17M, is committed first.'], [7000, 'People are the biggest cost, about 40%. Computing is only about a sixth.']],
+      html: () => { const P = [['Step 1: Test', 'US$1.17M', '₱73M', 96, 362.7, '#2F8F60'], ['Step 2: Build and try', 'US$2.27M', '₱142M', 365.7, 878.3, '#4E9E70'], ['Step 3: Go live', 'US$1.35M', '₱84M', 881.3, 1184, '#7DBB93']]; let s = '';
+        P.forEach(([n, u, p, a, b, col], i) => { const off = i ? 10 : 0; s += '<p class="ab slab sl' + i + '" style="left:' + a + 'px;top:208px;width:' + Math.max(150, b - a) + 'px">' + n + '</p><div class="ab sg sg' + i + '" style="left:' + a + 'px;top:240px;width:' + (b - a) + 'px;height:90px;background:' + col + ';border-radius:' + (i === 0 ? '12px 0 0 12px' : i === P.length - 1 ? '0 12px 12px 0' : '0') + '"></div><p class="ab samt sa' + i + '" style="left:' + (a + off) + 'px;top:342px;width:' + Math.max(100, b - a - off) + 'px">' + u + '</p><p class="ab speso sp' + i + '" style="left:' + (a + off) + 'px;top:370px;width:120px">' + p + '</p>'; });
+        return lab(10, 'What it costs') + sh('Paid in three parts') + '<p class="ab pill today" style="left:96px;top:148px;width:400px;padding:10px 14px;white-space:nowrap">Only this part is committed first</p>' + s + '<p class="ab counter" style="left:96px;top:430px;width:600px">US$0.0M</p><p class="ab small tot" style="left:96px;top:516px;width:1088px">to go live, about ₱299M, with a 15% safety margin. Then about US$2.7M a year to run.</p><div class="ab tags" style="left:96px;top:590px;width:1088px"><span class="tag3 t1">People 40%</span><span class="tag3 t2">Data 13%</span><span class="tag3 t3">Computing 17%</span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); [0, 1, 2].forEach(i => { const d = 600 + i * 700; A($('.sg' + i, r), [{ opacity: 0, transform: 'translateY(-60px)' }, { opacity: 1, transform: 'none' }], { delay: d, duration: 600, easing: 'cubic-bezier(.3,1.4,.5,1)' }); fadeIn($('.sl' + i, r), d + 100); fadeIn($('.sa' + i, r), d + 200); fadeIn($('.sp' + i, r), d + 250); }); pop($('.today', r), 3800); fadeIn($('.counter', r), 400); fadeIn($('.tot', r), 3400); fadeUp($('.t1', r), 7000); fadeUp($('.t2', r), 7400); fadeUp($('.t3', r), 7800); },
+      update: (r, t) => { const e = r._c || (r._c = $('.counter', r)); const s = 'US$' + (4.79 * ease(clamp((t - 600) / 2800))).toFixed(1) + 'M'; if (e.textContent !== s) e.textContent = s; }
     },
     { title: 'When it pays back', dur: 11500,
-      beats: [[0, 'This line is the total cost to Globe, including running costs from Year 3.'], [3000, 'Value needs to reach about ₱600M a year from Year 2.'], [6000, 'Then value catches up with cost by the end of Year 3.'], [8500, 'If Year 2 starts slowly, payback moves to the end of Year 4.']],
-      html: () => { const Y = v => 600 - v * 14.667; let g = '';
-        [0, 10, 20, 30].forEach(v => { g += '<line x1="160" y1="' + Y(v) + '" x2="1140" y2="' + Y(v) + '" stroke="' + (v ? '#21483B' : '#3C6B5A') + '" stroke-width="2"/>'; });
+      beats: (() => { const a = curve(0), z = curve(20); return [[0, 'This line is the total cost to Globe: three steps to go live, then about US$2.7M a year to run.'], [3000, 'Value starts at month 13. Care and staff savings bring about ₱' + a.php + 'M a year.'], [6000, 'On those savings alone, Luntian pays back at month ' + a.be.m + ', about 3 years after going live.'], [8500, 'With 20 business clients, it pays back at month ' + z.be.m + ', ' + (z.be.m - 12) + ' months after going live.']]; })(),
+      html: () => { const Y = v => 600 - v * 14.667, X = m => 160 + m * 16; let g = '';
+        [0, 10, 20, 30].forEach(v => { g += '<line x1="160" y1="' + Y(v) + '" x2="1120" y2="' + Y(v) + '" stroke="' + (v ? '#21483B' : '#3C6B5A') + '" stroke-width="2"/>'; });
         let lbl = ''; [0, 10, 20, 30].forEach(v => { lbl += '<p class="ab tick" style="left:96px;top:' + (Y(v) - 12) + 'px;width:52px;text-align:right">' + v + '</p>'; });
-        ['Start', 'Year 1', 'Year 2', 'Year 3', 'Year 4'].forEach((n, i) => { lbl += '<p class="ab tick" style="left:' + (160 + i * 240 - 50) + 'px;top:614px;width:100px">' + n + '</p>'; });
-        return lab(11, 'When it pays back') + sh('Value catches up with cost', 700) + '<p class="ab tick" style="left:160px;top:128px;width:120px;text-align:left">US$M</p><svg class="ab" style="left:0;top:0" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true">' + g + '<path class="pc" d="M160 600L400 491.5L640 388.8L880 318.4L1120 248" pathLength="1" stroke-dasharray="1" fill="none" stroke="#C9D5CD" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path class="pv" d="M160 600L400 600L640 459.2L880 318.4L1120 177.6" pathLength="1" stroke-dasharray="1" fill="none" stroke="#5FD39A" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><path class="ps" d="M160 600L400 600L640 529.6L880 388.8L1120 248" fill="none" stroke="#5FD39A" stroke-opacity=".7" stroke-width="4" stroke-dasharray="12 10" stroke-linecap="round"/><circle class="be" cx="880" cy="318.4" r="16" fill="none" stroke="#F2B544" stroke-width="5"/><circle class="be2" cx="1120" cy="248" r="16" fill="none" stroke="#F2B544" stroke-width="4" stroke-dasharray="6 5"/></svg>' + lbl + '<p class="ab pill bel" style="left:620px;top:244px;width:240px;padding:10px 12px">Break-even, Year 3</p><div class="ab card need" style="left:180px;top:170px;width:380px;height:96px"><div class="row" style="padding:0 22px"><div><b style="font-size:24px">About ₱600M a year</b><span style="font-size:19px">of value needed from Year 2</span></div></div></div><div class="ab tags" style="left:760px;top:132px;width:440px;justify-content:flex-end"><span class="tag3" style="font-size:17px">Cost</span><span class="tag3" style="font-size:17px;color:#5FD39A">Value</span><span class="tag3" style="font-size:17px;color:#A9C2B4">Dashed: slow start</span></div>'; },
-      enter: r => { fadeUp($('.sh', r), 0); draw($('.pc', r), 600, 2400); fadeUp($('.need', r), 3000); draw($('.pv', r), 3600, 2400); pop($('.be', r), 6000); pop($('.bel', r), 6100); fadeIn($('.ps', r), 8500, 900); pop($('.be2', r), 9300); }
+        ['Start', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'].forEach((n, i) => { lbl += '<p class="ab tick" style="left:' + (160 + i * 192 - 50) + 'px;top:614px;width:100px">' + n + '</p>'; });
+        const a = curve(0), z = curve(20), d = (pts, k) => pts.map((q, i) => (i ? 'L' : 'M') + X(q.m).toFixed(1) + ' ' + Y(k === 'c' ? q.c : q.v).toFixed(1)).join('');
+        const ax = X(a.be.t), ay = Y(a.be.c), zx = X(z.be.t), zy = Y(z.be.c);
+        return lab(11, 'When it pays back') + sh('Value catches up with cost', 700) + '<p class="ab tick" style="left:160px;top:128px;width:120px;text-align:left">US$M</p><svg class="ab" style="left:0;top:0" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true">' + g + '<path class="pc" d="' + d(a.pts, 'c') + '" pathLength="1" stroke-dasharray="1" fill="none" stroke="#C9D5CD" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path class="pv" d="' + d(a.pts, 'v') + '" pathLength="1" stroke-dasharray="1" fill="none" stroke="#5FD39A" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><path class="ps" d="' + d(z.pts, 'v') + '" fill="none" stroke="#5FD39A" stroke-opacity=".7" stroke-width="4" stroke-dasharray="12 10" stroke-linecap="round"/><circle class="be" cx="' + ax.toFixed(1) + '" cy="' + ay.toFixed(1) + '" r="16" fill="none" stroke="#F2B544" stroke-width="5"/><circle class="be2" cx="' + zx.toFixed(1) + '" cy="' + zy.toFixed(1) + '" r="16" fill="none" stroke="#F2B544" stroke-width="4" stroke-dasharray="6 5"/></svg>' + lbl + '<p class="ab pill bel" style="left:' + (ax + 20).toFixed(0) + 'px;top:' + (ay + 22).toFixed(0) + 'px;padding:10px 12px;white-space:nowrap">Pays back: month ' + a.be.m + '</p><p class="ab pill bel2" style="left:' + (zx - 330).toFixed(0) + 'px;top:' + (zy - 78).toFixed(0) + 'px;padding:10px 12px;white-space:nowrap">With 20 clients: month ' + z.be.m + '</p><div class="ab card need" style="left:180px;top:170px;width:440px;height:96px"><div class="row" style="padding:0 22px"><div><b style="font-size:24px">About ₱' + a.php + 'M a year</b><span style="font-size:19px">from care and staff savings, from month 13</span></div></div></div><div class="ab tags" style="left:700px;top:520px;width:500px;justify-content:flex-end"><span class="tag3" style="font-size:17px">Cost</span><span class="tag3" style="font-size:17px;color:#5FD39A">Care and staff</span><span class="tag3" style="font-size:17px;color:#A9C2B4">Dashed: plus 20 clients</span></div>'; },
+      enter: r => { fadeUp($('.sh', r), 0); draw($('.pc', r), 600, 2400); fadeUp($('.need', r), 3000); draw($('.pv', r), 3600, 2400); pop($('.be', r), 6000); pop($('.bel', r), 6100); fadeIn($('.ps', r), 8500, 900); pop($('.be2', r), 9300); pop($('.bel2', r), 9400); }
     },
     { title: 'Safe steps', dur: 13000,
-      beats: [[0, 'Money is released in steps, only when results are real.'], [900, 'Gate 1 at month 3: tests passed, client letters signed, privacy approved. US$4.58M is released.'], [4800, 'Gate 2 at month 9: pilots meet quality, safety, cost and energy targets. US$5.09M is released.'], [8700, 'Gate 3 at month 18: revenue on target and the long-term path chosen. US$3.57M is released.']],
+      beats: [[0, 'Money is released in steps, only when results are real.'], [900, 'Gate 1 at month 3: the tests beat today’s AI, the privacy check approves the data and the business case holds. US$2.27M is released.'], [4800, 'Gate 2 at month 8: the staff trial meets its quality, safety and cost targets. US$1.35M is released.'], [8700, 'At month 12, outside experts check safety and security. Then customers join care chat a few at a time.']],
       html: () => { let s = '<div class="ab trackline" style="left:96px;top:228px;width:1088px"></div>';
-        GX.forEach((x, i) => { s += '<div class="ab gwrap" style="left:' + (x - 45) + 'px;top:185px"><i></i><b>' + (i + 1) + '</b></div>'; });
+        GX.forEach((x, i) => { s += '<div class="ab gwrap" style="left:' + (x - 45) + 'px;top:185px"><i></i><b>' + ['1', '2', '✓'][i] + '</b></div>'; });
         GCARDS.forEach(([h, items, rel], i) => { s += '<div class="ab card gcard" style="left:' + (GX[i] - 160) + 'px;top:300px;width:320px"><h4>' + h + '</h4><ul>' + items.map(it => '<li><i></i>' + it + '</li>').join('') + '</ul><span class="rel">' + rel + '</span></div>'; });
         return lab(12, 'Safe steps') + sh('Money comes in three safe steps') + s + '<div class="ab tok" style="left:81px;top:215px"></div><p class="ab body bott" style="left:96px;top:620px;width:1088px">If a gate is missed, Globe stops or fixes. It never pays for the next step early.</p>'; },
       enter: r => { fadeUp($('.sh', r), 0); $$('.gwrap', r).forEach((e, i) => pop(e, 200 + i * 150)); fadeUp($('.bott', r), 12000); },
@@ -541,17 +554,17 @@ footer p{margin:0 0 6px;max-width:90ch}
         c.cards.forEach((o, i) => { const s0 = STAYS[i][0]; o.card.classList.toggle('on', t >= s0); o.lis.forEach((li, j) => li.classList.toggle('ok', t >= s0 + 400 + j * 500)); o.rel.classList.toggle('on', t >= s0 + 2000); }); }
     },
     { title: 'Who builds it', dur: 10500,
-      beats: [[0, 'A core team of 16 people builds Luntian inside AIDE, Globe’s AI group.'], [3500, 'They work in four squads: Model, Data, Platform and Trust.'], [6500, 'Partners such as AI Singapore, Singapore’s national AI programme, and Philippine universities work alongside, then hand over.']],
+      beats: [[0, 'A core team of 12 builds Luntian inside AIDE, Globe’s AI group. Ten start in Step 1.'], [3500, 'They work in four squads: Model, Data, Platform and Trust. Eight people run it after go-live.'], [6500, 'Partners such as AI Singapore, Singapore’s national AI programme, and Philippine universities work alongside, then hand over.']],
       html: () => { let s = '', idx = 0;
         [[610, 168], [670, 168]].forEach(([x, y]) => { s += '<div class="ab pd" data-i="' + (idx++) + '" style="left:' + (x - 15) + 'px;top:' + (y - 15) + 'px;background:#F3F1E8"></div>'; });
         s += '<p class="ab sq" style="left:440px;top:196px;width:400px"><span>Programme lead and product owner</span></p>';
         SQUADS.forEach(([n, d, cnt, cx, col]) => { const cols = Math.min(cnt, 3); for (let k = 0; k < cnt; k++) { const x = cx + ((k % 3) - (cols - 1) / 2) * 42, y = 340 + Math.floor(k / 3) * 42; s += '<div class="ab pd" data-i="' + (idx++) + '" style="left:' + (x - 15) + 'px;top:' + (y - 15) + 'px;background:' + col + '"></div>'; } s += '<div class="ab sq sqn" style="left:' + (cx - 130) + 'px;top:430px;width:260px"><b>' + n + '</b><span>' + d + '</span></div>'; });
-        return lab(13, 'Who builds it') + sh('A team of 16, plus partners', 700) + s + '<div class="ab partners" style="left:96px;top:572px;width:1088px"><span>AI Singapore</span><span>Philippine universities</span><span>STT GDC Philippines</span><span>ACEN</span><span>NVIDIA</span><span>DOST and DICT</span></div>'; },
+        return lab(13, 'Who builds it') + sh('A team of 12, plus partners', 700) + s + '<div class="ab partners" style="left:96px;top:572px;width:1088px"><span>AI Singapore</span><span>Philippine universities</span><span>STT GDC Philippines</span><span>ACEN</span><span>NVIDIA</span><span>DOST and DICT</span></div>'; },
       enter: r => { fadeUp($('.sh', r), 0); $$('.pd', r).forEach((e, i) => { const ang = i * 2.4, dx = Math.cos(ang) * 520, dy = Math.sin(ang) * 300; A(e, [{ opacity: 0, transform: 'translate(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px) scale(.4)' }, { opacity: 1, transform: 'none' }], { delay: 200 + i * 90, duration: 1100, easing: 'cubic-bezier(.2,.8,.2,1)' }); }); $$('.sq', r).forEach((e, i) => fadeUp(e, 1800 + i * 300, 14)); $$('.partners span', r).forEach((e, i) => fadeUp(e, 6500 + i * 180, 14)); }
     },
     { title: 'The decision', dur: 9500,
-      beats: [[0, 'The first decision is small and safe.'], [2500, 'Approve Phase 0: US$1.17M for 90 days.'], [5000, 'In 12 weeks Globe gets two pilots, a model shortlist and a business case.'], [7500, 'Then it decides: go, or stop and keep what was built.']],
-      html: () => '<div class="ab glow" style="left:0;top:0;width:1280px;height:720px"></div>' + lab(14, 'The decision') + '<p class="ab eb" style="left:64px;top:150px;width:800px">The first decision</p><p class="ab huge h1x" style="left:64px;top:190px;width:1150px">Approve Phase 0</p><p class="ab amb a1x" style="left:64px;top:292px;width:1150px">US$1.17M (₱73M) for 90 days</p>' + [['Two working pilots', 'in customer care and for Globe staff'], ['A scored model shortlist', 'tested on 1,000 real Globe questions'], ['A business case', 'backed by letters from three clients']].map(([b, s2], i) => '<div class="ab dcard d' + i + '" style="left:' + (64 + i * 384) + 'px;top:390px;width:360px;height:150px"><b>' + b + '</b><span>' + s2 + '</span></div>').join('') + '<div class="ab" style="left:64px;top:590px;width:900px;display:flex;align-items:center;gap:18px"><span class="ddia wk12d"></span><b class="wk12" style="font:600 28px var(--display)">Week 12: Gate 1, go or stop</b></div>',
+      beats: [[0, 'The first decision is small and safe.'], [2500, 'Approve Step 1: US$1.17M for 90 days.'], [5000, 'In 12 weeks Globe gets test results on its own questions, a privacy check and a business case.'], [7500, 'Then it decides: go, or stop and keep what was built.']],
+      html: () => '<div class="ab glow" style="left:0;top:0;width:1280px;height:720px"></div>' + lab(14, 'The decision') + '<p class="ab eb" style="left:64px;top:150px;width:800px">The first decision</p><p class="ab huge h1x" style="left:64px;top:190px;width:1150px">Approve Step 1</p><p class="ab amb a1x" style="left:64px;top:292px;width:1150px">US$1.17M (₱73M) for 90 days</p>' + [['Test results', 'models compared on 1,000 real Globe questions'], ['A privacy check', 'which Globe data can be used, and how'], ['A business case', 'built on Globe’s own numbers']].map(([b, s2], i) => '<div class="ab dcard d' + i + '" style="left:' + (64 + i * 384) + 'px;top:390px;width:360px;height:150px"><b>' + b + '</b><span>' + s2 + '</span></div>').join('') + '<div class="ab" style="left:64px;top:590px;width:900px;display:flex;align-items:center;gap:18px"><span class="ddia wk12d"></span><b class="wk12" style="font:600 28px var(--display)">Week 12: Gate 1, go or stop</b></div>',
       enter: r => { fadeIn($('.glow', r), 0, 1200); fadeUp($('.eb', r), 200); fadeUp($('.h1x', r), 2500, 30, 800); fadeUp($('.a1x', r), 3000); [0, 1, 2].forEach(i => fadeUp($('.d' + i, r), 5000 + i * 300)); fadeIn($('.wk12d', r), 7500); fadeUp($('.wk12', r), 7600); }
     }
   ];
@@ -643,17 +656,17 @@ footer p{margin:0 0 6px;max-width:90ch}
   if (window.ResizeObserver) new ResizeObserver(fit).observe(stage); else window.addEventListener('resize', fit);
   show(0);
 
-  /* tool 1: phases */
+  /* tool 1: steps */
   const PHASES = [
-    { name: 'Phase 0: Prove', months: 'Months 1 to 3', usd: 'US$1.17M', php: '₱73M', team: '10 people', unit: 'Weeks', lo: 1, hi: 12, span: [0, 3], what: 'Check data and privacy, test candidate models, run two quick pilots and build the business case.', acts: [['Mobilise', 1, 2], ['Data audit', 1, 6], ['Privacy impact assessment', 1, 6], ['Golden test sets', 2, 6], ['Model bake-off', 2, 8], ['Quick-win pilots', 3, 10], ['MLOps set-up', 2, 10], ['Partner and data terms', 4, 10], ['Capacity and energy plan', 4, 10], ['Business case', 8, 12], ['Gate 1 pack', 11, 12]], ends: 'Gate 1, month 3: go or stop', gate: 0 },
-    { name: 'Phase 1: Build', months: 'Months 4 to 9', usd: 'US$4.58M', php: '₱286M', team: '16 people', unit: 'Months', lo: 4, hi: 9, span: [3, 9], what: 'Collect Filipino data, adapt the three models, make them safe, and pilot with staff and care agents.', acts: [['Sign data deals', 4, 5], ['Build the Filipino corpus', 4, 7], ['Write teaching examples', 4, 8], ['Build the gateway and router', 4, 8], ['Adapt the three models', 5, 8], ['Teach Globe’s tasks', 6, 8], ['Make them safe', 6, 9], ['Connect to care systems', 6, 9], ['Staff pilot, about 500 people', 7, 9], ['Care pilot', 7, 9], ['Business offer design', 7, 9], ['Pilot hosting on 8 GPUs', 8, 9], ['First model card', 9, 9], ['Gate 2 pack', 9, 9]], ends: 'Gate 2, month 9: ready for production?', gate: 1 },
-    { name: 'Phase 2a: Scale', months: 'Months 10 to 18', usd: 'US$5.09M', php: '₱318M', team: '16 people', unit: 'Months', lo: 10, hi: 18, span: [9, 18], what: 'Go live in customer care, launch sovereign AI for business, add voice and regional languages, and refresh the models.', acts: [['Go live in care', 10, 15], ['Scale hosting to 24 GPUs', 10, 12], ['Speech and regional data', 10, 16], ['Launch sovereign AI for business', 12, 18, '12 onward'], ['Voice and scam protection', 13, 18], ['First model refresh', 13, 16], ['ISO/IEC 42001 certification', 13, 18, '13 to 20'], ['Energy report', 15, 15], ['Gate 3 pack', 18, 18]], ends: 'Gate 3, month 18: revenue on target?', gate: 2 },
-    { name: 'Phase 2b: Grow', months: 'Months 19 to 24', usd: 'US$3.57M', php: '₱223M', team: '16 people', unit: 'Months', lo: 19, hi: 24, span: [18, 24], what: 'A second model refresh, more business clients, a back-up site and the plan for Year 3.', acts: [['Second model refresh', 19, 22], ['Client tuning', 19, 24], ['Disaster-recovery site', 19, 21], ['Distil into the Edge model', 20, 23], ['Year 3 plan', 22, 24], ['Annual disclosure', 24, 24]], ends: 'The Year 3 plan: running costs of about US$4.8M a year', gate: null }
+    { name: 'Plan', months: '4 weeks before Step 1', usd: 'Agreed separately', php: 'not in the US$4.79M', team: 'Programme lead, with Globe’s teams', unit: 'Weeks', lo: 1, hi: 4, span: [-1, 0], what: 'A 4-week planning study confirms the top uses, the data Globe can use, the partners and the budget.', acts: [['Confirm the top uses', 1, 2], ['Check what data Globe can use', 1, 3], ['Shortlist partners and models', 2, 3], ['Refresh the budget', 3, 4], ['Step 1 plan ready', 4, 4]], ends: 'Ends with a Step 1 plan ready to approve', gate: null },
+    { name: 'Step 1: Test', months: 'Months 1 to 3', usd: 'US$1.17M', php: '₱73M', team: '10 people', unit: 'Weeks', lo: 1, hi: 12, span: [0, 3], what: 'Compare open models on about 1,000 real Globe questions in Filipino and Taglish, check that Globe’s data can be used lawfully, and run small trials.', acts: [['Set up the team', 1, 2], ['Data audit', 1, 6], ['Privacy impact assessment', 1, 6], ['Test questions', 2, 6], ['Compare five or six models', 2, 8], ['Small trials', 3, 10], ['Tools set-up', 2, 10], ['Partner and data terms', 4, 10], ['Space at STT GDC', 4, 10], ['Business case', 8, 12], ['Gate 1 pack', 11, 12]], ends: 'Ends with Gate 1, month 3: go or stop', gate: 0 },
+    { name: 'Step 2: Build and try', months: 'Months 4 to 8', usd: 'US$2.27M', php: '₱142M', team: '12 people', unit: 'Months', lo: 4, hi: 8, span: [3, 8], what: 'Teach the best model Filipino, connect it to Globe’s care and staff tools, and let Globe staff use it first.', acts: [['Sign data deals', 4, 4], ['Server live at STT GDC', 4, 5], ['Licensed Filipino text', 4, 6], ['Write worked examples', 4, 7], ['Build the gateway and router', 4, 7], ['Teach the model Filipino', 5, 6], ['Connect care and staff tools', 5, 7], ['Tune for care and safety', 6, 7], ['Staff trial', 7, 8], ['Gate 2 pack', 8, 8]], ends: 'Ends with Gate 2, month 8: ready for customers?', gate: 1 },
+    { name: 'Step 3: Go live', months: 'Months 9 to 12', usd: 'US$1.35M', php: '₱84M', team: '12 people', unit: 'Months', lo: 9, hi: 12, span: [8, 12], what: 'Fix what the staff trial found, pass outside safety and security checks, and open care chat to customers, a few at a time.', acts: [['Fix what the trial found', 9, 10], ['Safety examples and tuning', 9, 10], ['Safety filters and monitoring', 9, 11], ['Outside red-team audit', 10, 11], ['Penetration test', 10, 11], ['Go-live tests', 11, 11], ['Customers join care chat', 11, 12], ['Live in care', 12, 12]], ends: 'Ends with the go-live check, month 12', list: ['An outside red-team audit is passed', 'A penetration test is passed', 'Customers join care chat a few at a time, with checks every day'], gate: null },
+    { name: 'Run and grow', months: 'From month 13', usd: 'US$2.74M a year', php: '₱171M a year', team: '8 people', unit: 'Months', lo: 13, hi: 24, span: [12, 24], what: 'Run, watch and improve the service. Each add-on starts only when its trigger is met and its own numbers show that it pays.', acts: [['Run and watch the service', 13, 24, '13 onward'], ['Track value against the plan', 13, 24, '13 onward'], ['Model refresh, about once a year', 19, 22], ['Yearly outside audit', 22, 24], ['Add-ons, only when triggered', 13, 24, '13 onward']], ends: 'Add-ons come one at a time, each with its own trigger', list: ['A second server: about US$0.44M a year, when the first is busy 70% of the time for four weeks', 'Luntian for business clients: about US$0.40M once, when three sign letters of intent', 'A standby site and ISO/IEC 42001: about US$0.28M once, when clients or regulators ask', 'Voice on the care hotline: about US$0.80M once, when chat meets its targets three months in a row', 'More languages: about US$0.37M once, when there is enough licensed data', 'Scam warnings from a small fast model: about US$0.26M once, when the anti-scam team asks and privacy approves', 'A large model for the hardest questions: about US$0.32M once plus a server, when over 5% of questions need the backup'], gate: null }
   ];
   const GATES = [
-    { name: 'Gate 1', when: 'Month 3', rel: 'US$4.58M for Phase 1', items: ['The best candidate model meets the agreed target on Globe’s golden sets in Filipino and Taglish', 'The business case clears the payback hurdle, with a named owner for each value line', 'At least three clients outside the Ayala group have signed letters of intent', 'The privacy impact assessment approves the data sources', 'Renewable-backed capacity is confirmed at STT GDC Philippines', 'Legal has approved the base model’s licence'], ifnot: 'Stop at US$1.17M. Globe keeps the data audit, test sets and pilot results, and carries on with rented AI models.' },
-    { name: 'Gate 2', when: 'Month 9', rel: 'US$5.09M for Phase 2a', items: ['The Core model meets its golden-set targets in Filipino, Taglish and Cebuano', 'Safety tests pass, with no open critical issues from red teaming', 'The care pilot hits its targets for containment, handle time and satisfaction', 'Cost per answer and energy per 1,000 answers are within target', 'The model card is published and privacy controls have been audited'], ifnot: 'Fix and re-test within two months.' },
-    { name: 'Gate 3', when: 'Month 18', rel: 'US$3.57M for Phase 2b', items: ['Signed business revenue is on target, against the number set in Phase 0', 'Care savings are on target and customer satisfaction has held or improved', 'Energy per 1,000 answers is at or below target', 'A decision is taken on building from scratch, joining a national consortium, or continuing to adapt'], ifnot: 'The last tranche stays locked, except about US$0.11M a month to keep the service running.' }
+    { name: 'Gate 1', when: 'Month 3', rel: 'US$2.27M for Step 2', items: ['The best model beats today’s AI on Globe’s test questions in Filipino and Taglish', 'The privacy impact assessment approves the data Globe wants to use', 'Legal has approved the model’s licence', 'The business case holds up with Globe’s own numbers', 'STT GDC Philippines has agreed a small locked space for Step 2'], ifnot: 'Stop at US$1.17M. Globe keeps the test questions, the data audit, the tools and what the team learned.' },
+    { name: 'Gate 2', when: 'Month 8', rel: 'US$1.35M for Step 3', items: ['The staff trial meets its targets for quality and safety', 'Cost per answer is within target', 'The links to Globe’s care and staff tools work', 'The security review is passed', 'Globe staff are using it and find it useful'], ifnot: 'Stop at about US$3.4M. Globe keeps the trained model, the data and the platform.' }
   ];
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const ptabs = $('#phase-tabs'), ppanel = $('#phase-panel');
@@ -662,43 +675,47 @@ footer p{margin:0 0 6px;max-width:90ch}
     const P = PHASES[i];
     $$('.tab', ptabs).forEach((b, j) => { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
     ppanel.setAttribute('aria-labelledby', 'ptab' + i);
-    const X = m => 10 + m * (600 / 24);
-    let mini = '<svg class="mini" viewBox="0 0 620 66" role="img" aria-label="' + esc(P.name) + ' on the 24-month timeline"><rect x="10" y="14" width="600" height="18" rx="9" fill="var(--line)"/><rect x="' + X(P.span[0]) + '" y="14" width="' + (X(P.span[1]) - X(P.span[0])) + '" height="18" rx="9" fill="var(--accent)"/>';
+    const X = m => 10 + (m + 1) * (600 / 25);
+    let mini = '<svg class="mini" viewBox="0 0 620 66" role="img" aria-label="' + esc(P.name) + ' on the timeline, in months from approval"><rect x="10" y="14" width="600" height="18" rx="9" fill="var(--line)"/><rect x="' + X(P.span[0]) + '" y="14" width="' + (X(P.span[1]) - X(P.span[0])) + '" height="18" rx="9" fill="var(--accent)"/>';
     [0, 6, 12, 18, 24].forEach(m => { mini += '<text x="' + X(m) + '" y="60" font-size="20" text-anchor="middle" fill="var(--muted)" font-family="Nunito Sans, sans-serif">' + m + '</text>'; });
     mini += '</svg>';
     const rows = P.acts.map(([n, a, b, custom]) => { const range = P.hi - P.lo + 1, l = (a - P.lo) / range * 100, w = (b - a + 1) / range * 100; const when = custom ? P.unit + ' ' + custom : a === b ? P.unit.replace(/s$/, '') + ' ' + a : P.unit + ' ' + a + ' to ' + b; return '<li><span>' + esc(n) + '</span><span class="bar"><i style="left:' + l.toFixed(1) + '%;width:' + w.toFixed(1) + '%"></i></span><span class="when">' + when + '</span></li>'; }).join('');
-    const gate = P.gate === null ? '<p>' + esc(P.ends) + '</p>' : '<p><b>Ends with ' + esc(P.ends) + '</b></p><ul>' + GATES[P.gate].items.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+    const items = typeof P.gate === 'number' ? GATES[P.gate].items : (P.list || []);
+    const gate = '<p><b>' + esc(P.ends) + '</b></p>' + (items.length ? '<ul>' + items.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
     ppanel.innerHTML = '<div class="ph-grid"><div><p class="ph-name">' + esc(P.name) + '</p>' + mini + '<dl class="kv"><dt>When</dt><dd>' + P.months + '</dd><dt>Budget</dt><dd>' + P.usd + ' (' + P.php + ')</dd><dt>Team</dt><dd>' + P.team + '</dd></dl><p class="what">' + esc(P.what) + '</p><div class="ends">' + gate + '</div></div><div><ul class="acts">' + rows + '</ul></div></div>';
   }
   ptabs.addEventListener('keydown', e => { const tabs = $$('.tab', ptabs), k = tabs.indexOf(document.activeElement); if (k < 0) return; if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const n = (k + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length; renderPhase(n); tabs[n].focus(); } });
   renderPhase(0);
 
-  /* tool 2: payback */
-  const COST = [0, 7.4, 14.4, 19.2, 24.0, 28.8, 33.6];
-  const val = $('#val'), slow = $('#slow'), valout = $('#valout');
+  /* tool 2: payback by use, from the same model as the proposal */
+  const utabs = $('#use-tabs');
+  const CURVES = USES.map(U => curve(U.clients));
+  let ui = 0;
+  USES.forEach((U, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.textContent = U.label; b.addEventListener('click', () => { ui = i; payback(); }); utabs.appendChild(b); });
   function payback() {
-    const php = +val.value, v = php / 62.5;
-    const V = [0, 0]; V[2] = slow.checked ? v / 2 : v; for (let k = 3; k <= 6; k++) V[k] = V[k - 1] + v;
-    let when = null;
-    for (let k = 1; k <= 6; k++) { const d1 = V[k] - COST[k]; if (d1 >= -1e-9) { const d0 = V[k - 1] - COST[k - 1]; const f = d0 >= 0 ? 0 : d0 / (d0 - d1); when = k - 1 + f; break; } }
-    valout.textContent = '₱' + php.toLocaleString('en-US') + 'M a year (about US$' + v.toFixed(1) + 'M)';
+    const U = USES[ui], K = CURVES[ui];
+    $$('.tab', utabs).forEach((b, j) => b.setAttribute('aria-pressed', j === ui ? 'true' : 'false'));
     const res = $('#payresult'), big = $('#paybig'), txt = $('#paytext');
-    if (when === null) { res.classList.add('wait'); big.textContent = 'Not within 6 years'; txt.textContent = 'At this level of value, Luntian does not cover its cost within six years.'; }
-    else { res.classList.remove('wait'); const yrs = Math.round(when * 10) / 10, mon = Math.round(when * 12); big.textContent = 'About ' + yrs.toFixed(1) + ' years'; const yr = Math.ceil(when - 1e-6); txt.textContent = (Math.abs(when - Math.round(when)) < .03 ? 'Value catches up with cost at the end of Year ' + Math.round(when) + '.' : 'Value catches up with cost during Year ' + yr + ', around month ' + mon + '.'); }
-    const W = 640, H = 300, x = k => 56 + k * ((W - 80) / 6), maxY = Math.max(35, Math.ceil(Math.max(V[6], COST[6]) / 10) * 10), y = u => H - 40 - u / maxY * (H - 70);
-    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Cumulative cost and value over six years">';
-    for (let u = 0; u <= maxY; u += 10) s += '<line x1="56" x2="' + (W - 24) + '" y1="' + y(u) + '" y2="' + y(u) + '" stroke="var(--line)"/><text x="48" y="' + (y(u) + 5) + '" text-anchor="end" font-size="15" fill="var(--muted)" font-family="Nunito Sans, sans-serif">' + u + '</text>';
-    for (let k = 0; k <= 6; k++) s += '<text x="' + x(k) + '" y="' + (H - 16) + '" text-anchor="middle" font-size="15" fill="var(--muted)" font-family="Nunito Sans, sans-serif">' + (k ? 'Y' + k : 'Start') + '</text>';
-    s += '<text x="56" y="16" font-size="15" fill="var(--muted)" font-family="Nunito Sans, sans-serif">US$M, added up from approval</text>';
-    s += '<polyline fill="none" stroke="var(--muted)" stroke-width="3" stroke-linejoin="round" points="' + COST.map((u, k) => x(k) + ',' + y(u)).join(' ') + '"/>';
-    s += '<polyline fill="none" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round" points="' + V.map((u, k) => x(k) + ',' + y(u)).join(' ') + '"/>';
-    s += '<text x="' + (x(6) - 4) + '" y="' + (y(COST[6]) - 8) + '" text-anchor="end" font-size="16" font-weight="700" fill="var(--muted)" font-family="Nunito Sans, sans-serif">Cost</text>';
-    s += '<text x="' + (x(6) - 4) + '" y="' + (y(V[6]) + (V[6] > COST[6] ? -8 : 18)) + '" text-anchor="end" font-size="16" font-weight="700" fill="var(--accent)" font-family="Nunito Sans, sans-serif">Value</text>';
-    if (when !== null) { const k = Math.floor(when), f = when - k, kk = Math.min(6, k + 1), cx = lerp(x(k), x(kk), f), cy = lerp(y(COST[k]), y(COST[kk]), f); s += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="none" stroke="var(--amber)" stroke-width="4"/>'; }
+    if (!K.be) { res.classList.add('wait'); big.textContent = 'Not within 5 years'; txt.textContent = 'At this level of value, Luntian does not pay back within five years.'; }
+    else { res.classList.remove('wait'); big.textContent = 'Month ' + K.be.m; txt.textContent = 'Value builds to about ₱' + K.php + 'M a year. Luntian pays back at month ' + K.be.m + ', ' + (K.be.m - 12) + ' months after going live, when about US$' + K.be.spent.toFixed(1) + 'M has been spent in total.'; }
+    const W = 640, H = 300, x = m => 56 + m * ((W - 80) / 60), maxY = 35, y = u => H - 40 - u / maxY * (H - 70);
+    const F = ' font-family="Nunito Sans, sans-serif"';
+    const pl = (C, k) => C.pts.map(q => x(q.m).toFixed(1) + ',' + y(k === 'c' ? q.c : q.v).toFixed(1)).join(' ');
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Cumulative cost and value over five years: ' + esc(U.label.toLowerCase()) + '">';
+    for (let u = 0; u <= 30; u += 10) s += '<line x1="56" x2="' + (W - 24) + '" y1="' + y(u) + '" y2="' + y(u) + '" stroke="var(--line)"/><text x="48" y="' + (y(u) + 5) + '" text-anchor="end" font-size="15" fill="var(--muted)"' + F + '>' + u + '</text>';
+    for (let k = 0; k <= 5; k++) s += '<text x="' + x(k * 12) + '" y="' + (H - 16) + '" text-anchor="middle" font-size="15" fill="var(--muted)"' + F + '>' + (k ? 'Y' + k : 'Start') + '</text>';
+    s += '<text x="56" y="16" font-size="15" fill="var(--muted)"' + F + '>US$M, added up from approval</text>';
+    s += '<line x1="' + x(12) + '" x2="' + x(12) + '" y1="' + y(33) + '" y2="' + y(0) + '" stroke="var(--muted)" stroke-opacity=".5" stroke-dasharray="4 4"/><text x="' + (x(12) + 6) + '" y="' + (y(33) + 4) + '" font-size="14" fill="var(--muted)"' + F + '>Live at month 12</text>';
+    CURVES.forEach((C, j) => { if (j !== ui) s += '<polyline fill="none" stroke="var(--accent)" stroke-opacity=".25" stroke-width="2" stroke-linejoin="round" points="' + pl(C, 'v') + '"/>'; });
+    s += '<polyline fill="none" stroke="var(--muted)" stroke-width="3" stroke-linejoin="round" points="' + pl(K, 'c') + '"/>';
+    s += '<polyline fill="none" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round" points="' + pl(K, 'v') + '"/>';
+    const end = K.pts[K.pts.length - 1], vAbove = end.v > end.c;
+    s += '<text x="' + (x(60) - 4) + '" y="' + (y(end.c) + (vAbove ? 20 : -8)) + '" text-anchor="end" font-size="16" font-weight="700" fill="var(--muted)"' + F + '>Cost</text>';
+    s += '<text x="' + (x(60) - 4) + '" y="' + (y(end.v) + (vAbove ? -8 : 20)) + '" text-anchor="end" font-size="16" font-weight="700" fill="var(--accent)"' + F + '>Value</text>';
+    if (K.be) s += '<circle cx="' + x(K.be.t).toFixed(1) + '" cy="' + y(K.be.c).toFixed(1) + '" r="8" fill="none" stroke="var(--amber)" stroke-width="4"/>';
     s += '</svg>';
     $('#paychart').innerHTML = s;
   }
-  val.addEventListener('input', payback); slow.addEventListener('change', payback);
   payback();
 
   /* tool 3: gates */
@@ -716,7 +733,7 @@ footer p{margin:0 0 6px;max-width:90ch}
     const G = GATES[gi], boxes = $$('input', glist), n = boxes.filter(b => b.checked).length;
     const all = n === boxes.length;
     verdict.classList.toggle('go', all);
-    verdict.innerHTML = all ? '<b>Go: release ' + G.rel + '.</b><p>Every condition is met, so leadership releases the next tranche.</p>' : '<b>Not yet: ' + n + ' of ' + boxes.length + ' conditions met.</b><p>If the gate is missed: ' + esc(G.ifnot) + '</p>';
+    verdict.innerHTML = all ? '<b>Go: release ' + G.rel + '.</b><p>Every condition is met, so leadership releases the money for the next step.</p>' : '<b>Not yet: ' + n + ' of ' + boxes.length + ' conditions met.</b><p>If the gate is missed: ' + esc(G.ifnot) + '</p>';
   }
   renderGate(0);
 })();
